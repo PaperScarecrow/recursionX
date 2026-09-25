@@ -65,17 +65,27 @@ def main():
     res["zero_shot_held_out"] = zero_shot(model, hyper, held, evs, args.k_demos, rng)
     print("zero-shot (meta-train skills):", res["zero_shot_meta_train"], flush=True)
     print("zero-shot (held-out skills):  ", res["zero_shot_held_out"], flush=True)
+    os.makedirs(os.path.join(RUNS, "hyperlora"), exist_ok=True)
+    torch.save(hyper.state_dict(), os.path.join(RUNS, "hyperlora", f"hyper_s{args.seed}.pt"))
+    # control: a *skill-agnostic* generated adapter (mean descriptor over the
+    # meta-training skills).  If it helps as much as hyper_init, the gain comes
+    # from a meta-learned initialisation, not from reading the demonstrations.
+    with torch.no_grad():
+        mean_desc = torch.stack([demo_features(model, [t.sample(rng) for _ in range(args.k_demos)])
+                                 for t in meta]).mean(0)
+        blind = {k: (A.detach(), B.detach()) for k, (A, B) in hyper(mean_desc).items()}
     cfg = LifecycleConfig(wake_steps=args.wake_steps)
     res["warm_start"] = {}
     for t in held:
         row = {}
-        for mode in ("default_init", "hyper_init"):
+        for mode in ("default_init", "blind_init", "hyper_init"):
             emb = model.embed.weight.data.clone()  # wake trains the new token's row; undo between modes
             seed_all(args.seed)
             waker = WakeLearner(cfg, seed=args.seed)
             rec = SkillRecord(t.name, t, new_tokens=[t.task_token])
-            init = generate_for(model, hyper, [t.sample(rng) for _ in range(args.k_demos)]) \
-                if mode == "hyper_init" else None
+            init = {"default_init": None, "blind_init": blind,
+                    "hyper_init": generate_for(model, hyper, [t.sample(rng) for _ in range(args.k_demos)])
+                    if mode == "hyper_init" else None}[mode]
             waker.learn_skill(model, rec, init_lora=init)
             with active_adapters(model, {t.name: 1.0}):
                 row[mode] = evaluate(model, evs[t.name])["acc"]
@@ -83,6 +93,9 @@ def main():
             model.embed.weight.data.copy_(emb)
         res["warm_start"][t.name] = row
         print(f"warm start {t.name}: {row}", flush=True)
+    res["warm_start_mean"] = {m: sum(r[m] for r in res["warm_start"].values()) / len(held)
+                              for m in ("default_init", "blind_init", "hyper_init")}
+    print("mean:", res["warm_start_mean"], flush=True)
     save_json(res, os.path.join(RUNS, "hyperlora", f"hyperlora_s{args.seed}.json"))
 
 
