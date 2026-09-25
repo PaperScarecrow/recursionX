@@ -31,6 +31,7 @@ class LifecycleConfig:
     rem_steps: int = 300          # distillation / rehearsal steps
     rem_lr: float = 1e-3
     rem_batch: int = 32           # per source (each new skill, and old-skill rehearsal)
+    old_batch_per_skill: int = 0  # >0: stratified rehearsal, this many per old skill
     rem_params: str = "adaptable" # "adaptable" (AdaptableLinear weights) | "all"
     ce_weight: float = 1.0
     kl_weight: float = 1.0

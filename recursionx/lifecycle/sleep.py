@@ -99,6 +99,9 @@ class SleepConsolidator:
             p.requires_grad_(id(p) in ids)
         opt = torch.optim.AdamW(params, lr=c.rem_lr, weight_decay=0.0, betas=(0.9, 0.98))
         replay = [e for r in old_records for e in r.episodes]
+        dreams_by_token: Dict[int, List[List[int]]] = {}
+        for d in dreams:
+            dreams_by_token.setdefault(d[1], []).append(d)
         student.train()
         teacher.eval()
         hist = []
@@ -113,7 +116,19 @@ class SleepConsolidator:
                 if r.episodes:
                     seqs[: c.rem_batch // 4] = self.rng.sample(r.episodes, min(len(r.episodes), c.rem_batch // 4))
                 sources.append((seqs, {r.name: 1.0} if r.kind == "skill" else {}, True))
-            if replay or dreams:
+            if c.old_batch_per_skill > 0 and old_records:
+                # stratified rehearsal: every old skill gets the same share
+                seqs = []
+                for r in old_records:
+                    k = c.old_batch_per_skill
+                    pool = dreams_by_token.get(getattr(r.task, "task_token", None), [])
+                    n_dream = int(round(k * c.dream_frac)) if pool else 0
+                    src = r.episodes or pool
+                    seqs += [self.rng.choice(src) for _ in range(k - n_dream)] if src else []
+                    seqs += [self.rng.choice(pool) for _ in range(n_dream)]
+                if seqs:
+                    sources.append((seqs, {}, True))
+            elif replay or dreams:
                 n_dream = int(round(c.rem_batch * c.dream_frac)) if dreams else 0
                 n_rep = c.rem_batch - n_dream if replay else 0
                 seqs = [self.rng.choice(replay) for _ in range(n_rep)]
