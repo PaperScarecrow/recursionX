@@ -74,7 +74,8 @@ def train_loop(model, params: Sequence[torch.nn.Parameter], sampler: Callable[[i
                steps: int, lr: float = 3e-3, batch: int = 64, input_weight: float = 0.0,
                weight_decay: float = 0.0, loss_fn: Optional[Callable] = None,
                after_backward: Optional[Callable] = None, log_every: int = 0,
-               log_prefix: str = "", clip: float = 1.0) -> List[float]:
+               log_prefix: str = "", clip: float = 1.0,
+               callback: Optional[Callable[[int], None]] = None) -> List[float]:
     """Generic loop.  ``loss_fn(model, inp, tgt, w) -> loss`` overrides plain CE."""
     params = [p for p in params if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=lr, weight_decay=weight_decay, betas=(0.9, 0.98))
@@ -102,6 +103,8 @@ def train_loop(model, params: Sequence[torch.nn.Parameter], sampler: Callable[[i
             avg = sum(losses[-log_every:]) / log_every
             print(f"{log_prefix}step {step + 1}/{steps} loss {avg:.4f} ({time.time() - t0:.0f}s)",
                   flush=True)
+            if callback is not None:
+                callback(step + 1)
     return losses
 
 
