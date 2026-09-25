@@ -14,15 +14,18 @@ from .data.tasks import collate
 
 
 def weighted_ce(logits: torch.Tensor, tgt: torch.Tensor, w: torch.Tensor) -> torch.Tensor:
-    ce = F.cross_entropy(logits.reshape(-1, logits.shape[-1]), tgt.reshape(-1), reduction="none")
+    tgt, w = tgt.to(logits.device), w.to(logits.device)
+    ce = F.cross_entropy(logits.reshape(-1, logits.shape[-1]).float(), tgt.reshape(-1),
+                         reduction="none")
     return (ce * w.reshape(-1)).sum() / w.sum().clamp_min(1e-6)
 
 
 def weighted_kl(student_logits: torch.Tensor, teacher_logits: torch.Tensor, w: torch.Tensor,
                 T: float = 1.0) -> torch.Tensor:
     """KL(teacher || student) per position, weighted."""
-    s = F.log_softmax(student_logits / T, -1)
-    t = F.log_softmax(teacher_logits / T, -1)
+    w = w.to(student_logits.device)
+    s = F.log_softmax(student_logits.float() / T, -1)
+    t = F.log_softmax(teacher_logits.to(student_logits.device).float() / T, -1)
     kl = (t.exp() * (t - s)).sum(-1)
     return (kl * w).sum() / w.sum().clamp_min(1e-6) * (T * T)
 
@@ -30,12 +33,13 @@ def weighted_kl(student_logits: torch.Tensor, teacher_logits: torch.Tensor, w: t
 class EvalSet:
     """A fixed, pre-collated evaluation set for one task."""
 
-    def __init__(self, task, n: int = 256, seed: int = 12345):
-        rng = random.Random(seed + zlib.crc32(task.name.encode()) % 10007)
-        if hasattr(task, "all_examples"):
-            seqs = task.all_examples()
-        else:
-            seqs = [task.sample(rng) for _ in range(n)]
+    def __init__(self, task, n: int = 256, seed: int = 12345, seqs=None):
+        if seqs is None:
+            rng = random.Random(seed + zlib.crc32(task.name.encode()) % 10007)
+            if hasattr(task, "all_examples"):
+                seqs = task.all_examples()
+            else:
+                seqs = [task.sample(rng) for _ in range(n)]
         self.task = task
         self.inp, self.tgt, self.w = collate(seqs)
         self.out_mask = self.w >= 1.0
@@ -50,6 +54,7 @@ def evaluate(model, es: EvalSet, batch: int = 256, n_loops: Optional[int] = None
     for s in range(0, es.inp.shape[0], batch):
         inp, tgt, m = es.inp[s:s + batch], es.tgt[s:s + batch], es.out_mask[s:s + batch]
         logits = forward(inp) if forward else model(inp, n_loops=n_loops).logits
+        tgt, m = tgt.to(logits.device), m.to(logits.device)
         ok = (logits.argmax(-1) == tgt) | ~m
         correct_seq += ok.all(-1).sum().item()
         correct_tok += ((logits.argmax(-1) == tgt) & m).sum().item()
@@ -67,6 +72,7 @@ def sequence_accuracy(model, seqs: List[List[int]], forward: Optional[Callable] 
     model.eval()
     logits = forward(inp) if forward else model(inp).logits
     model.train(was)
+    tgt, w = tgt.to(logits.device), w.to(logits.device)
     ok = (logits.argmax(-1) == tgt) | (w < 1.0)
     return ok.all(-1).float().mean().item()
 

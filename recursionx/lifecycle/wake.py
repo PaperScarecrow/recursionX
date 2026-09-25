@@ -8,8 +8,8 @@ from typing import Dict, Optional
 import torch
 
 from ..data.tasks import collate
-from ..modules.lora import (add_skill_adapter, collecting_stats, gather_covariances,
-                            remove_skill, set_active_adapters)
+from ..modules.lora import (adaptable_modules, add_skill_adapter, collecting_stats,
+                            gather_covariances, remove_skill, set_active_adapters)
 from ..train import freeze, train_loop, unfreeze
 from .config import LifecycleConfig
 from .skills import SkillRecord
@@ -30,8 +30,12 @@ class WakeLearner:
         return gather_covariances(model)
 
     def learn_skill(self, model, record: SkillRecord, steps: Optional[int] = None,
-                    log_every: int = 0) -> Dict[str, float]:
-        """Research -> reason -> write a projected LoRA for ``record``."""
+                    log_every: int = 0, init_lora: Optional[dict] = None) -> Dict[str, float]:
+        """Research -> reason -> write a projected LoRA for ``record``.
+
+        ``init_lora`` (module name -> (A, B)), e.g. from a HyperLoRA, seeds the
+        adapter before refinement; modules it does not cover keep the default
+        (data-projected) initialisation."""
         c = self.cfg
         record.status = "learning"
         if not record.episodes:  # keep a small episodic buffer for rehearsal later
@@ -40,6 +44,14 @@ class WakeLearner:
         covs = self.skill_covariances(model, record) if c.data_init else None
         params = add_skill_adapter(model, record.name, c.rank, c.alpha,
                                    projected=c.projected, covs=covs)
+        if init_lora is not None:
+            mods = dict(adaptable_modules(model))
+            with torch.no_grad():
+                for name, (A, B) in init_lora.items():
+                    ad = mods[name].adapters[record.name]
+                    if ad.A.shape == A.shape and ad.B.shape == B.shape:
+                        ad.A.copy_(A)
+                        ad.B.copy_(B)
         after = None
         if c.train_token_rows and record.new_tokens:
             params = params + [model.embed.weight]

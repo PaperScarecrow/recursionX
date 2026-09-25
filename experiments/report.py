@@ -17,13 +17,15 @@ ORDER = ["finetune", "finetune_replay", "lora_merge", "rx_merge_only", "rx_gpm",
 def metrics(run):
     M = run["matrix"]
     final = M[-1]
-    allk = BASE_SKILLS + NEW_SKILLS
-    learned_acc = [M[i][s] for i, s in enumerate(NEW_SKILLS)]  # right after learning
-    new_final = [final[s] for s in NEW_SKILLS]
-    base_final = [final[s] for s in BASE_SKILLS]
-    base_init = [run["initial"][s] for s in BASE_SKILLS]
+    base_k = run.get("base_skills", BASE_SKILLS)
+    new_k = run.get("new_skills", NEW_SKILLS)
+    allk = base_k + new_k
+    learned_acc = [M[i][s] for i, s in enumerate(new_k)]  # right after learning
+    new_final = [final[s] for s in new_k]
+    base_final = [final[s] for s in base_k]
+    base_init = [run["initial"][s] for s in base_k]
     # backward transfer on new skills (final - just learned), and on base skills
-    bwt_new = mean(new_final[i] - learned_acc[i] for i in range(len(NEW_SKILLS) - 1))
+    bwt_new = mean(new_final[i] - learned_acc[i] for i in range(len(new_k) - 1))
     return {
         "avg_all": mean(final[k] for k in allk),
         "avg_base": mean(base_final),
@@ -72,17 +74,20 @@ def plot(runs, names, out_dir):
     import matplotlib.pyplot as plt
 
     fig, axes = plt.subplots(1, 2, figsize=(11, 4))
-    steps = list(range(1, len(NEW_SKILLS) + 1))
+    r0 = runs[names[0]][0]
+    new_k = r0.get("new_skills", NEW_SKILLS)
+    base_k = r0.get("base_skills", BASE_SKILLS)
+    steps = list(range(1, len(new_k) + 1))
     for n in names:
         r = runs[n][0]
-        base_curve = [mean(row[s] for s in BASE_SKILLS) for row in r["matrix"]]
-        seen_curve = [mean(row[s] for s in NEW_SKILLS[: i + 1]) for i, row in enumerate(r["matrix"])]
+        base_curve = [mean(row[s] for s in base_k) for row in r["matrix"]]
+        seen_curve = [mean(row[s] for s in new_k[: i + 1]) for i, row in enumerate(r["matrix"])]
         axes[0].plot(steps, base_curve, marker="o", label=n)
         axes[1].plot(steps, seen_curve, marker="o", label=n)
     axes[0].set_title("base skills (pre-trained) – mean accuracy")
     axes[1].set_title("new skills learned so far – mean accuracy")
     for ax in axes:
-        ax.set_xticks(steps, NEW_SKILLS, rotation=30)
+        ax.set_xticks(steps, new_k, rotation=30)
         ax.set_ylim(-0.02, 1.02)
         ax.grid(alpha=0.3)
     axes[1].legend(fontsize=8)
@@ -91,14 +96,14 @@ def plot(runs, names, out_dir):
 
     # accuracy matrices
     fig, axes = plt.subplots(1, len(names), figsize=(3.2 * len(names), 3.6), squeeze=False)
-    allk = BASE_SKILLS + NEW_SKILLS
+    allk = base_k + new_k
     for ax, n in zip(axes[0], names):
         r = runs[n][0]
         mat = [[row[k] for k in allk] for row in r["matrix"]]
         ax.imshow(mat, vmin=0, vmax=1, cmap="viridis", aspect="auto")
         ax.set_title(n, fontsize=9)
         ax.set_xticks(range(len(allk)), allk, rotation=90, fontsize=6)
-        ax.set_yticks(range(len(NEW_SKILLS)), [f"after {s}" for s in NEW_SKILLS], fontsize=6)
+        ax.set_yticks(range(len(new_k)), [f"after {s}" for s in new_k], fontsize=6)
     fig.tight_layout()
     fig.savefig(os.path.join(out_dir, "matrices.png"), dpi=120)
 

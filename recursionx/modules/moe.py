@@ -158,7 +158,7 @@ class FluidMoE(nn.Module):
         self.router.weight.data.copy_(W)
         self.router_bias = nn.Parameter(torch.cat([self.router_bias.data,
                                                    self.router_bias.new_tensor([bias])]))
-        self.usage = torch.cat([self.usage, torch.zeros(1)])
+        self.usage = torch.cat([self.usage.cpu(), torch.zeros(1)])
         return self.n_experts - 1
 
     # -------------------------------------------------------------- offloading

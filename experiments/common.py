@@ -19,6 +19,11 @@ RUNS = os.path.join(os.path.dirname(__file__), "..", "runs")
 VOCAB = Vocab(16)
 BASE_SKILLS = ["copy", "reverse", "succ", "sort", "max", "interleave"]
 NEW_SKILLS = ["rotl", "pred", "swap_pairs", "sort_desc", "add_first", "first_last"]
+# longer stream: every remaining skill in the suite (14 new skills, 7 sleeps)
+NEW_SKILLS_LONG = NEW_SKILLS + ["rotr", "double", "cumsum", "mirror_sum", "dedup", "count_first",
+                                "min", "skip_first"]
+STREAMS = {"default": NEW_SKILLS, "long": NEW_SKILLS_LONG}
+STREAM = "default"  # set by experiment entry points
 INPUT_WEIGHT = 0.1
 
 
@@ -33,8 +38,12 @@ def base_tasks():
     return make_suite(BASE_SKILLS, VOCAB, start_slot=0)
 
 
+def new_skill_names():
+    return STREAMS[STREAM]
+
+
 def new_tasks():
-    return make_suite(NEW_SKILLS, VOCAB, start_slot=len(BASE_SKILLS))
+    return make_suite(new_skill_names(), VOCAB, start_slot=len(BASE_SKILLS))
 
 
 def eval_sets(tasks, n=256):

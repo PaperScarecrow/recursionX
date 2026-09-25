@@ -78,13 +78,14 @@ class NeuralMemory(nn.Module):
         q, k, v = self.q(x), self.k(x), self.v(x)
         if self.conv_kernel:
             q, k, v = self._conv(q, k, v)
-        q, k = F.normalize(q, dim=-1), F.normalize(k, dim=-1)
-        hp = self.hyper(x)
+        # test-time updates accumulate over the sequence: run them in fp32
+        q, k, v = F.normalize(q.float(), dim=-1), F.normalize(k.float(), dim=-1), v.float()
+        hp = self.hyper(x).float()
         theta = torch.sigmoid(hp[..., 0]) * self.max_lr          # (B, T)
         eta = torch.sigmoid(hp[..., 1])
         alpha = torch.sigmoid(hp[..., 2] - 2.0) * self.max_decay
         if state is None:
-            M = self.M0.unsqueeze(0).expand(B, -1, -1)
+            M = self.M0.float().unsqueeze(0).expand(B, -1, -1)
             S = torch.zeros_like(M)
         else:
             M, S = state
@@ -99,5 +100,5 @@ class NeuralMemory(nn.Module):
             a = alpha[:, sl].mean(1).view(B, 1, 1)
             S = e * S - grad                                      # momentum / surprise
             M = (1 - a) * M + S                                   # retention gate
-        y = torch.cat(ys, 1)
+        y = torch.cat(ys, 1).to(x.dtype)
         return self.out(y) * torch.sigmoid(self.gate(x)), (M, S)

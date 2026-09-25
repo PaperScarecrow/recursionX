@@ -112,6 +112,7 @@ class RecursionX(nn.Module):
     def forward(self, tokens: torch.Tensor, n_loops: Optional[int] = None,
                 memory_state: Optional[MemState] = None, return_hidden: bool = False) -> RXOutput:
         cfg = self.cfg
+        tokens = tokens.to(self.embed.weight.device)
         x = self.embed(tokens)
         if self.engram is not None:
             x = x + self.engram(tokens, x)
@@ -156,8 +157,8 @@ class RecursionX(nn.Module):
     def generate(self, prompt: torch.Tensor, max_new: int, temperature: float = 0.0,
                  stop_token: Optional[int] = None, n_loops: Optional[int] = None) -> torch.Tensor:
         """Simple (non-cached) sampling; fine for the small models used here."""
-        out = prompt
-        done = torch.zeros(prompt.shape[0], dtype=torch.bool, device=prompt.device)
+        out = prompt.to(self.embed.weight.device)
+        done = torch.zeros(prompt.shape[0], dtype=torch.bool, device=out.device)
         for _ in range(max_new):
             logits = self(out, n_loops=n_loops).logits[:, -1]
             if temperature <= 0:

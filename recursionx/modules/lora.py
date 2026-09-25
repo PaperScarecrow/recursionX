@@ -82,6 +82,10 @@ class AdaptableLinear(nn.Module):
         self.register_buffer("protected_basis", torch.zeros(in_features, 0))
         # Mixing weights of active adapters: name -> float or (B, 1, 1) tensor.
         self.active: Dict[str, Weight] = {}
+        # A *generated* low-rank delta (A, B, scale) supplied as plain tensors,
+        # e.g. by a HyperLoRA; shared by the whole batch, differentiable w.r.t.
+        # whatever produced it.
+        self.generated: Optional[Tuple[torch.Tensor, torch.Tensor, float]] = None
         # Activation statistics (for GPM subspaces and data-projected init).
         self.collect_stats = False
         self._cov: Optional[torch.Tensor] = None
@@ -97,6 +101,9 @@ class AdaptableLinear(nn.Module):
             if ad is None:
                 continue
             y = y + w * ad(x)
+        if self.generated is not None:
+            A, B, scale = self.generated
+            y = y + scale * F.linear(F.linear(x, A.to(x.dtype)), B.to(x.dtype))
         return y
 
     def _accumulate(self, x: torch.Tensor) -> None:

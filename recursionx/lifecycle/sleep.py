@@ -58,9 +58,10 @@ class SleepConsolidator:
         tau = self.cfg.dream_temperature
         while len(out) < n:
             b = min(batch, n - len(out))
-            cur = torch.tensor([[BOS, self.rng.choice(task_tokens)] for _ in range(b)])
-            in_answer = torch.zeros(b, dtype=torch.bool)
-            done = torch.zeros(b, dtype=torch.bool)
+            dev = next(model.parameters()).device
+            cur = torch.tensor([[BOS, self.rng.choice(task_tokens)] for _ in range(b)], device=dev)
+            in_answer = torch.zeros(b, dtype=torch.bool, device=dev)
+            done = torch.zeros(b, dtype=torch.bool, device=dev)
             for _ in range(max_len - 2):
                 logits = model(cur).logits[:, -1]
                 sampled = torch.multinomial(torch.softmax(logits / tau, -1), 1).squeeze(-1)
@@ -109,7 +110,7 @@ class SleepConsolidator:
         for step in range(steps):
             for g in opt.param_groups:
                 g["lr"] = cosine_lr(step, steps, c.rem_lr, warmup=10)
-            loss = torch.zeros(())
+            loss = torch.zeros((), device=next(student.parameters()).device)
             sources = []
             for r in new_records:
                 seqs = r.sample(self.rng, c.rem_batch)
@@ -179,7 +180,7 @@ class SleepConsolidator:
         grown = 0
         for m in moes:
             m.track_usage = False
-            src = int(m.usage.argmax())
+            src = int(m.usage.cpu().argmax())
             mu_new = new_feats[id(m)]
             mu_old = torch.cat(means[id(m)]).mean(0) if old else torch.zeros_like(mu_new)
             direction = torch.nn.functional.normalize(mu_new - mu_old, dim=0) * m.router.weight.norm(dim=1).mean() * 4

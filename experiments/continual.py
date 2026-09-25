@@ -30,6 +30,7 @@ import time
 
 import torch
 
+import common
 from common import (INPUT_WEIGHT, RUNS, base_tasks, eval_sets, load_base, new_tasks, save_json,
                     seed_all)
 from recursionx import DualHemisphereBrain, LifecycleConfig, SkillRecord
@@ -134,8 +135,12 @@ def main():
     ap.add_argument("--threads", type=int, default=4)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--base", default=None)
-    ap.add_argument("--out", default=os.path.join(RUNS, "continual"))
+    ap.add_argument("--stream", default="default", choices=sorted(common.STREAMS))
+    ap.add_argument("--out", default=None)
     args = ap.parse_args()
+    common.STREAM = args.stream
+    if args.out is None:
+        args.out = os.path.join(RUNS, "continual" if args.stream == "default" else f"continual_{args.stream}")
     torch.set_num_threads(args.threads)
     base = load_base(args.base)
     evs = eval_sets(base_tasks() + new_tasks())
@@ -152,7 +157,10 @@ def main():
                   " ".join(f"{k}={v:.2f}" for k, v in accs.items()), flush=True)
 
         matrix, extra = METHODS[name](model, log)
-        save_json({"method": name, "seed": args.seed, "initial": initial, "matrix": matrix,
+        save_json({"method": name, "seed": args.seed, "stream": args.stream,
+                   "base_skills": [t.name for t in base_tasks()],
+                   "new_skills": [t.name for t in new_tasks()],
+                   "initial": initial, "matrix": matrix,
                    "seconds": time.time() - t0, **extra},
                   os.path.join(args.out, f"{name}_s{args.seed}.json"))
 

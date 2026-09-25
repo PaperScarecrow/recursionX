@@ -105,8 +105,25 @@ class DualHemisphereBrain:
             r.probes = r.sample(random.Random(zlib.crc32(r.name.encode()) + 7), self.cfg.probes_per_skill)
 
     # ------------------------------------------------------------------- wake
+    def research_and_ingest(self, request, loop, anchors: Optional[Dict[str, EvalSet]] = None,
+                            auto_sleep: bool = True, init_lora: Optional[dict] = None,
+                            log_every: int = 0) -> dict:
+        """Research a skill (gather + verify, see :mod:`recursionx.research`),
+        then learn and gate it on its own held-out verified probes."""
+        record, report = loop.run(request)
+        if record is None:
+            rep = {"skill": request.name, "accepted": False, "reason": "research failed",
+                   "verified": report.n_verified, "candidates": report.n_candidates,
+                   "reports": report.reports}
+            self.history.append({"event": "research_failed", **rep})
+            return rep
+        val = EvalSet(record.task, seqs=record.probes)
+        rep = self.ingest(record, val, anchors, auto_sleep, log_every, init_lora=init_lora)
+        rep["provenance"] = {k: v for k, v in record.provenance.items() if k != "reports"}
+        return rep
+
     def ingest(self, record: SkillRecord, val: EvalSet, anchors: Optional[Dict[str, EvalSet]] = None,
-               auto_sleep: bool = True, log_every: int = 0) -> dict:
+               auto_sleep: bool = True, log_every: int = 0, init_lora: Optional[dict] = None) -> dict:
         """Research -> learn -> gate.  Returns the gate report."""
         model = self.awake
         if record.kind == "fact":
@@ -119,7 +136,7 @@ class DualHemisphereBrain:
             rep = {"skill": record.name, "kind": "fact", "acc": acc}
             self.history.append({"event": "fact", **rep})
             return rep
-        self.waker.learn_skill(model, record, log_every=log_every)
+        self.waker.learn_skill(model, record, log_every=log_every, init_lora=init_lora)
         self._ensure_probes(record)
         ok, rep = self.gate.assess(model, record, val, anchors or {})
         rep = {"skill": record.name, "accepted": ok, **rep}

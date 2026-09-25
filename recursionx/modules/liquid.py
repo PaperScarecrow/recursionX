@@ -65,6 +65,10 @@ class LiquidMixer(nn.Module):
         z = self.conv((b * h).transpose(1, 2))[..., :T].transpose(1, 2)
         rate = F.softplus(self.dt_proj(x) + self.dt_bias) * self.A_log.exp()
         log_a = -rate
-        a = log_a.exp()
-        s, _ = liquid_scan((1 - a) * z, log_a, chunk=self.chunk)
+        # the scan exponentiates cumulative sums: keep it in fp32 under autocast
+        with torch.autocast(x.device.type, enabled=False):
+            log_a, zf = log_a.float(), z.float()
+            a = log_a.exp()
+            s, _ = liquid_scan((1 - a) * zf, log_a, chunk=self.chunk)
+        s = s.to(z.dtype)
         return self.out_proj(c * (s + self.D * z))

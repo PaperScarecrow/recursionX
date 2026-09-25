@@ -22,6 +22,7 @@ class SkillRecord:
     prototype: Optional[torch.Tensor] = None
     metrics: Dict[str, float] = field(default_factory=dict)
     new_tokens: List[int] = field(default_factory=list)
+    provenance: Dict[str, object] = field(default_factory=dict)  # where the data came from
 
     def sample(self, rng: random.Random, n: int) -> List[List[int]]:
         return [self.task.sample(rng) for _ in range(n)]
@@ -32,6 +33,7 @@ def prompt_features(model, inp: torch.Tensor) -> torch.Tensor:
     """Prompt embedding from the *base* prelude (no adapters): the mean state
     over the prompt (up to and including SEP) concatenated with the state at
     the end of the prompt, which in a causal model summarises it."""
+    inp = inp.to(model.embed.weight.device)
     with active_adapters(model, {}):
         x = model.embed(inp)
         if model.engram is not None:
@@ -108,7 +110,7 @@ class SkillRouter:
                 lg = model(inp[idx], **kw).logits
             if out is None:
                 out = lg.new_zeros(inp.shape[0], *lg.shape[1:])
-            out[idx] = lg
+            out[idx.to(lg.device)] = lg
         return out
 
 
