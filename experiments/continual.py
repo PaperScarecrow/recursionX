@@ -9,9 +9,11 @@ through whatever the method would *serve*.  Methods:
                    buffer size as Recursion-X: 64 stored episodes per skill)
   lora_merge       plain LoRA per skill, merged into the base right away
   rx               Recursion-X: projected LoRA wake learning -> gate -> dual-
-                   hemisphere sleep every 2 skills (NREM merge, REM distillation
-                   with replay + dreams, GPM, subspace protection)
-  rx_merge_only    rx without REM (merge + protection only)
+                   hemisphere sleep every 2 skills (REM: multi-teacher distillation
+                   with stratified replay + dreams, GPM, subspace protection)
+  rx_merge         rx, but adapters are merged into the base before REM (NREM merge)
+  rx_merge_only    merge + protection only, no REM
+  rx_no_dreams     rx with replay only (no self-generated dreams)
   rx_unprojected   rx with ordinary LoRA and no gradient projection
   rx_grow          rx with expert growth enabled during sleep
 """
@@ -38,7 +40,7 @@ FT_LR = 1e-3
 
 
 def lifecycle_cfg(**kw) -> LifecycleConfig:
-    base = dict(wake_steps=WAKE_STEPS, rem_steps=300, sleep_pressure=2)
+    base = dict(wake_steps=WAKE_STEPS, sleep_pressure=2)
     base.update(kw)
     return LifecycleConfig(**base)
 
@@ -113,7 +115,9 @@ METHODS = {
     "finetune_replay": lambda m, log: run_finetune(m, True, log),
     "lora_merge": run_lora_merge,
     "rx": run_rx,
-    "rx_merge_only": lambda m, log: run_rx(m, log, rem_steps=0),
+    "rx_merge": lambda m, log: run_rx(m, log, nrem_merge=True),
+    "rx_merge_only": lambda m, log: run_rx(m, log, nrem_merge=True, rem_steps=0),
+    "rx_no_dreams": lambda m, log: run_rx(m, log, dream_frac=0.0),
     "rx_unprojected": lambda m, log: run_rx(m, log, projected=False, data_init=False, gpm_strength=0.0),
     "rx_grow": lambda m, log: run_rx(m, log, grow_experts=True),
 }

@@ -27,11 +27,11 @@ class LifecycleConfig:
 
     # ---- sleep: consolidation ---------------------------------------------
     sleep_pressure: int = 2       # accepted skills that trigger a sleep
-    nrem_merge: bool = True       # fold projected adapters into the base first
-    rem_steps: int = 300          # distillation / rehearsal steps
+    nrem_merge: bool = False      # fold adapters into the base before REM (see docs)
+    rem_steps: int = 600          # distillation / rehearsal steps
     rem_lr: float = 1e-3
     rem_batch: int = 32           # per source (each new skill, and old-skill rehearsal)
-    old_batch_per_skill: int = 0  # >0: stratified rehearsal, this many per old skill
+    old_batch_per_skill: int = 16 # >0: stratified rehearsal, this many per old skill
     rem_params: str = "adaptable" # "adaptable" (AdaptableLinear weights) | "all"
     ce_weight: float = 1.0
     kl_weight: float = 1.0
