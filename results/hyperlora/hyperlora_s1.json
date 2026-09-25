@@ -1,0 +1,71 @@
+{
+  "zero_shot_before": {
+    "rotl": 0.0,
+    "pred": 0.0,
+    "swap_pairs": 0.0,
+    "sort_desc": 0.0078125,
+    "add_first": 0.0,
+    "first_last": 0.0
+  },
+  "zero_shot_meta_train": {
+    "copy": 1.0,
+    "reverse": 1.0,
+    "succ": 1.0,
+    "sort": 0.984375,
+    "max": 1.0,
+    "interleave": 1.0,
+    "rotr": 0.0,
+    "double": 0.09375,
+    "cumsum": 0.0,
+    "mirror_sum": 0.0,
+    "dedup": 0.015625,
+    "count_first": 0.7421875,
+    "min": 0.1953125,
+    "skip_first": 0.4921875
+  },
+  "zero_shot_held_out": {
+    "rotl": 0.0,
+    "pred": 0.0,
+    "swap_pairs": 0.0,
+    "sort_desc": 0.0078125,
+    "add_first": 0.0,
+    "first_last": 0.0
+  },
+  "warm_start": {
+    "rotl": {
+      "default_init": 1.0,
+      "blind_init": 1.0,
+      "hyper_init": 1.0
+    },
+    "pred": {
+      "default_init": 1.0,
+      "blind_init": 1.0,
+      "hyper_init": 1.0
+    },
+    "swap_pairs": {
+      "default_init": 1.0,
+      "blind_init": 1.0,
+      "hyper_init": 1.0
+    },
+    "sort_desc": {
+      "default_init": 0.9921875,
+      "blind_init": 0.9765625,
+      "hyper_init": 0.96875
+    },
+    "add_first": {
+      "default_init": 0.0,
+      "blind_init": 0.2421875,
+      "hyper_init": 0.71875
+    },
+    "first_last": {
+      "default_init": 1.0,
+      "blind_init": 1.0,
+      "hyper_init": 1.0
+    }
+  },
+  "warm_start_mean": {
+    "default_init": 0.83203125,
+    "blind_init": 0.8697916666666666,
+    "hyper_init": 0.9479166666666666
+  }
+}

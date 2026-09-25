@@ -235,6 +235,31 @@ reversible event instead of a silent one.
 * The trade-off: two skills remain unconsolidated (still adapters) until a
   later sleep succeeds.
 
+### HyperLoRA: generated adapters as a warm start (roadmap 03)
+
+A hypernetwork (4.6 M params) maps 16 demonstrations of a skill to a LoRA
+for every mixer, memory and shared-expert matrix.  It was meta-trained on 14
+skills (6 base + 8 extra) with the base frozen, then tested on the **6
+held-out continual skills**.  Wake learning ran for 150 steps from three
+starting points (`experiments/hyperlora.py`, `results/hyperlora/`, 2 seeds):
+
+| start of wake learning | seed 0 | seed 1 | mean |
+|---|---|---|---|
+| default (data-projected A, B = 0) | 0.741 | 0.832 | 0.786 |
+| *blind* generated adapter (same for every skill) | 0.987 | 0.870 | 0.928 |
+| **skill-specific generated adapter** | **0.993** | **0.948** | **0.971** |
+
+* **Zero-shot** (no gradient steps), generated adapters score ~0 on held-out
+  skills.  That's expected from a 14-skill family.  They leave the base skills
+  intact (1.00).
+* **Most of the warm-start gain comes from meta-learning a good
+  initialisation.**  The blind control gets +0.14.  Reading the
+  demonstrations adds a further +0.04, almost all of it on the hardest skill
+  (`add_first`: 0.00 default → 0.24–0.94 blind → 0.72–0.98 skill-specific).
+* The first version exploded: the generated ΔW = BA grew until it broke every
+  skill (`results/hyperlora/hyperlora_v1_unstable_s0.json`).  Zero-initialising
+  the generator's B output fixed it.
+
 ### Architecture ablation (base skills, trained from scratch, 1,000 steps)
 
 | variant | mean exact match @1k steps |
@@ -278,7 +303,9 @@ What exists and is tested:
   background sleep while serving;
 * a continual-learning benchmark with baselines, ablations and results.
 
-Next steps, roughly in order of expected value:
+Detailed work orders with acceptance criteria are in
+**[docs/roadmap/](docs/roadmap/README.md)**.  Next steps, roughly in order of
+expected value:
 
 1. **Multiple seeds and longer skill streams**, with more sleep cycles, to
    measure how rehearsal cost and forgetting scale over many cycles.
@@ -286,9 +313,8 @@ Next steps, roughly in order of expected value:
    different function".  Also try routing-conditioned adapters: a LoRA
    gated by the router, which can then be baked as a new expert rather than a
    dense merge.
-3. **Hypernetwork "projector"** that generates a LoRA directly from a
-   skill's documentation or examples (Text-to-LoRA style).  That would let the
-   wake phase produce a first adapter in one forward pass, then refine it.
+3. **HyperLoRA at scale**: a larger procedural skill family, and generating
+   adapters from text descriptions (framework built; see roadmap 03).
 4. **Real research loop**: replace the task oracle with a tool-using agent
    that searches, reads and writes its own training episodes, and let the
    gate verify skills against held-out checks.

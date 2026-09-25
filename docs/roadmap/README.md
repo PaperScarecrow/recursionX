@@ -10,7 +10,7 @@ concrete tasks, and **acceptance criteria**.  Work them roughly in order;
 | 00 | [QA checklist](00_QA_CHECKLIST.md) | do first: verify the repo end to end |
 | 01 | [Multi-seed + long skill streams](01_multiseed_long_stream.md) | framework **built** (`run_matrix.py`, `--stream long`); runs pending |
 | 02 | [Expert growth + router-gated adapters](02_growth_and_routed_experts.md) | growth **built + tested**, not benchmarked; routed-expert baking **placeholder** |
-| 03 | [HyperLoRA (skill → adapter generator)](03_hyperlora.md) | framework **built + tested**; first small experiment in `results/hyperlora/` |
+| 03 | [HyperLoRA (skill → adapter generator)](03_hyperlora.md) | framework **built + tested**; warm start 0.971 vs 0.786 default (blind control 0.928), 2 seeds |
 | 04 | [Research loop](04_research_loop.md) | framework **built + tested** (sources, verifiers, loop, brain hook); LLM teacher backend **placeholder** |
 | 05 | [Scale-up: GPU, real text](05_scale_up.md) | text pipeline, presets and GPU training script **built**; KV cache, fused MoE and FSDP **placeholders** |
 | 06 | [Revision lane (facts that change)](06_revision_lane.md) | **placeholder**: design + tasks |

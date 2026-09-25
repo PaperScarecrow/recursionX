@@ -26,7 +26,23 @@ Gradient steps then refine it ("project, then refine").
   a generated adapter.
 - `experiments/hyperlora.py`: meta-trains on 14 skills (6 base + 8 extra)
   and tests on the 6 held-out continual skills, both zero-shot and as a warm
-  start.  First result: `results/hyperlora/hyperlora_s0.json`.
+  start, with a *blind* control (one generated adapter from the mean
+  descriptor, used for every skill).
+
+## Results so far (2 seeds, `results/hyperlora/`)
+| wake start (150 steps) | mean acc on held-out skills |
+|---|---|
+| default init | 0.786 |
+| blind generated init | 0.928 |
+| skill-specific generated init | 0.971 |
+
+- Zero-shot is ~0 on held-out skills, and base skills are unaffected.
+- Most of the gain is a *meta-learned initialisation* (the blind control).
+  Skill conditioning adds +0.04, mostly on `add_first`.  Two seeds are not
+  enough to call that increment significant: run ≥ 5.
+- v1 exploded because the generator produced both LoRA factors from a
+  non-zero init.  The fix was zero-initialising the B part of every head and
+  using LR 3e-4.  The failed run is kept as `hyperlora_v1_unstable_s0.json`.
 
 ## Known limitations
 - A family of 14 algorithmic skills is far too small to expect zero-shot
@@ -49,7 +65,9 @@ Gradient steps then refine it ("project, then refine").
    subspace (project `A` with each module's `U`).  Check the effect on
    interference when the generated adapter is always on.
 4. **Warm-start curve.**  Accuracy vs wake steps (0, 25, 50, 100, 200) for
-   default init vs hyper init, on held-out skills, 3 seeds.
+   default / blind / hyper init, on held-out skills, ≥ 5 seeds.  Also compare
+   against a non-hypernetwork meta-learned init (e.g. Reptile on the LoRA
+   parameters), since the blind control suggests that is most of the effect.
 5. **Brain integration.**  Add `LifecycleConfig.hyper_init: bool`.  When a
    HyperLoRA is attached to the brain, `ingest` generates `init_lora`
    automatically from the record's episodes.  After each sleep, add the
