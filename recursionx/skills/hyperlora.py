@@ -74,8 +74,14 @@ class HyperLoRA(nn.Module):
         self.heads = nn.ModuleDict()
         for fi, fo in sorted(set(self.shapes)):
             head = nn.Linear(hidden, (fi + fo) * rank)
-            nn.init.normal_(head.weight, std=1e-3)
-            nn.init.zeros_(head.bias)
+            with torch.no_grad():
+                # A part: ~ LoRA's default A scale; B part: exactly zero, so an
+                # untrained generator produces ΔW = 0 (like LoRA's B = 0 init).
+                # Without this, Adam inflates both factors at once and the
+                # generated ΔW = BA explodes within ~100 steps.
+                head.weight[: fi * rank].normal_(std=1.0 / (fi ** 0.5 * hidden ** 0.5))
+                head.weight[fi * rank:].zero_()
+                head.bias.zero_()
             self.heads[f"{fi}x{fo}"] = head
 
     def forward(self, desc: torch.Tensor) -> LoRADict:
@@ -119,7 +125,7 @@ class HyperLoRA(nn.Module):
 
 
 def meta_train(model, hyper: HyperLoRA, tasks: Sequence, steps: int, k_demos: int = 16,
-               batch: int = 32, lr: float = 1e-3, log_every: int = 0, seed: int = 0) -> List[float]:
+               batch: int = 32, lr: float = 3e-4, log_every: int = 0, seed: int = 0) -> List[float]:
     """Meta-train the hypernetwork across a family of skills with the base frozen."""
     from ..train import weighted_ce
     rng = random.Random(seed)
