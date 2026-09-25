@@ -110,21 +110,34 @@ single always-on adapter is mathematically identical to merging it.
 
 1. **Synchronise** the sleeping hemisphere to the awake base and snapshot the
    awake hemisphere as a frozen teacher, so serving can continue.
-2. **NREM – merge** each accepted projected adapter into the base.
+2. **NREM – merge** (optional, `nrem_merge`, off by default): fold each
+   accepted adapter into the base.  Experiments showed that merging, even
+   projected adapters, damages the base far more than distillation can
+   repair.  The default therefore distils into the *intact* base.
 3. **REM – consolidate.**  The student is distilled from several teachers:
-   each new skill's teacher is *base + that skill's adapter*.  Old skills'
-   teacher is the pre-sleep base, applied to a small episodic replay buffer
-   and to **dreams**.  Dreams are inputs the model samples from its own input
-   distribution after an old instruction token, answered greedily by the
-   teacher.  Weight gradients are projected out of the protected subspaces
-   (GPM).
+   each new skill's teacher is *base + that skill's adapter*, together with
+   its ground-truth episodes.  Old skills' teacher is the pre-sleep base,
+   applied to stratified rehearsal: the same number of examples per old skill
+   per step, half from a small episodic buffer and half **dreams**.  Dreams
+   are inputs the model samples from its own input distribution after an old
+   instruction token, answered greedily by the teacher.  GPM gradient
+   projection is available (`gpm_strength`) but off by default, since it
+   blocked late skills from consolidating.
 4. **Grow** (optional): if a skill still misses `growth_acc_threshold`, clone
    an expert in each MoE layer.  The new router row points at the skill's
    hidden-state direction, which gives the skill fresh, unprotected capacity.
-5. **Protect** the new knowledge by extending `U`.
-6. **Swap.**  The rested hemisphere wakes up.  The other drops its adapters
-   and is re-synchronised: the reset.  Skills learned *during* sleep are handed
-   over by re-learning them on the new base from their stored episodes.
+5. **Protect** the new knowledge by extending `U`.  Later wake adapters are
+   then projected away from it.
+6. **Audit** (sleep as a transaction): run every skill's held-out retention
+   probes on the awake snapshot (as served) and on the student.  Commit only
+   if no protected skill regresses by more than `commit_max_drop` and every
+   new skill clears the gate.  Otherwise **roll back**: discard the student,
+   keep serving the pending skills from their adapters, and record the
+   syndrome.
+7. **Swap** (on commit).  The rested hemisphere wakes up.  The other drops
+   its adapters and is re-synchronised: the reset.  Skills learned *during*
+   sleep are handed over by re-learning them on the new base from their
+   stored episodes.
 
 `DualHemisphereBrain.sleep(background=True)` runs consolidation in a thread,
 so the awake hemisphere keeps answering requests.
