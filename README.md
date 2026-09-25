@@ -61,7 +61,7 @@ tests/                     unit + lifecycle tests
 
 ```bash
 pip install -e .[dev]
-pytest -q                                   # 16 tests, ~1 min on CPU
+pytest -q                                   # 18 tests, ~2 min on CPU
 
 cd experiments
 python pretrain_base.py --steps 3000        # base model on 6 base skills (~17 min CPU)
@@ -100,13 +100,25 @@ a claim about language-model quality at scale.
   skills are evaluated through whatever the method would serve.
 * **Recursion-X:** projected-LoRA wake learning, then the gate, then a sleep
   after every 2 accepted skills.  Sleep is 600 REM steps: multi-teacher
-  distillation, 16 rehearsal examples per old skill per step (half stored
-  episodes, half dreams), and GPM.  The episodic buffer is 64 examples per
-  skill, the same buffer the replay baseline gets.
+  distillation into the intact base, 16 rehearsal examples per old skill per
+  step (half stored episodes, half dreams), and no gradient projection.  The
+  episodic buffer is 64 examples per skill, the same buffer the replay
+  baseline gets.
 
 ### Main result: 6 new skills learned sequentially
 
-RESULTS_TABLE
+| method | seeds | avg_all | avg_base | avg_new | learn_acc | base_forgetting | bwt_new | CPU min |
+|---|---|---|---|---|---|---|---|---|
+| fine-tune (sequential) | 1 | 0.083 | 0.000 | 0.167 | 0.835 | 0.997 | −0.802 | 48 |
+| LoRA per skill, merged at once | 1 | 0.083 | 0.000 | 0.167 | 0.854 | 0.997 | −0.825 | 29 |
+| fine-tune + 50 % replay | 2 | 0.857 ± 0.011 | 0.938 ± 0.007 | 0.775 ± 0.015 | 0.881 ± 0.076 | 0.059 ± 0.007 | −0.127 ± 0.073 | 28 |
+| Recursion-X + GPM in sleep | 1 | 0.870 | 0.941 | 0.799 | 0.983 | 0.055 | −0.220 | 91 |
+| Recursion-X, plain LoRA | 2 | 0.906 ± 0.016 | 0.965 ± 0.010 | 0.846 ± 0.041 | 0.901 ± 0.070 | 0.031 ± 0.010 | −0.066 ± 0.035 | 81 |
+| **Recursion-X** (projected LoRA, no GPM in sleep) | 2 | **0.922 ± 0.021** | 0.957 ± 0.003 | **0.886 ± 0.046** | 0.959 ± 0.035 | 0.039 ± 0.003 | −0.087 ± 0.013 | 90 |
+
+(`results/continual/`; ± is the spread over seeds.  Raw per-step accuracy
+matrices are in the JSON files.  The Recursion-X rows were run before the
+sleep audit below existed, so every sleep was committed.)
 
 *avg_all*: final mean accuracy over all 12 skills.  *learn_acc*: accuracy on
 each new skill right after learning it.  *base_forgetting*: mean drop on the 6
@@ -122,14 +134,22 @@ Takeaways:
 2. **The wake/sleep lifecycle works.**  While awake, Recursion-X has **zero
    interference**: new skills are served through their adapters by a learned
    router, and base skills stay at 0.98–1.00.  After each sleep the skills
-   live in the base weights with no adapters left.  Of the tested variants,
-   the best reaches **REPLACE_BEST** average accuracy with base forgetting of
-   REPLACE_FORGET.  Fine-tuning with replay, the standard strong baseline,
-   reaches 0.868.
+   live in the base weights with no adapters left.  Recursion-X ends at
+   **0.922** average accuracy against 0.857 for fine-tuning with replay, the
+   standard strong baseline.  Both use the same 64-example episodic buffer
+   per skill.  Recursion-X also forgets less of the base (0.039 vs 0.059).
+   It uses about 3× the compute of the replay baseline, mostly in sleep.
 3. **How to consolidate matters more than anything else.**  See the
    sleep-variant study below.
-4. **Honest negative result: at this scale the "projection" does not help.**
-   See below.
+4. **Projection helps learning but hurts consolidation.**  Projected,
+   data-initialised adapters learned new skills more reliably: 0.959 vs 0.901
+   learn accuracy.  On one seed a plain LoRA failed to learn `add_first` at
+   all (0.01) while the projected one reached 0.97.  But GPM gradient
+   projection *during sleep* cost 0.05 in final accuracy.  See below.
+5. **Remaining weakness: late skills.**  The last consolidated skills
+   (`sort_desc`, `add_first`) are the least stable.  On seed 1 only 0.48 of
+   `add_first`'s adapter accuracy (0.68) survived the final sleep.  That
+   motivated the sleep audit below.
 
 ### Sleep-variant study (what makes consolidation work)
 
@@ -157,7 +177,7 @@ different ways (`experiments/sleep_variants.py`,
   rehearsal (stored episodes + dreams).  The student even beat its teacher
   (rotl 0.68 → 1.00), because REM also sees ground-truth episodes.
 
-### Why the projection did not help here (and what that teaches)
+### Where projection helps and where it hurts
 
 Projected LoRA constrains the adapter to input directions that consolidated
 knowledge does not use.  In this suite, a new skill is *a different function
@@ -172,8 +192,11 @@ only thing that separates skills is the instruction context.  Measured:
   skills perfectly intact.  But the adapter can then no longer learn rotl
   (0.03).  This is the stability–plasticity trade-off in its purest form.
 * Gradient projection during REM protects more as skills pile up.  By the
-  third sleep it blocked `add_first` from consolidating (0.36).  The
-  unprojected variant reached 0.88 on the same skill.
+  third sleep it blocked `add_first` from consolidating (0.36).  With the same
+  projected adapters but no GPM in sleep, it reached 0.96.
+* As a *starting point* for a skill, though, projection plus data-projected
+  initialisation beat plain LoRA.  It gave 0.959 vs 0.901 accuracy right
+  after learning, with fewer failures to learn at all.
 
 Separation between skills has to come from **context-conditional capacity**,
 not input-space orthogonality.  In Recursion-X that means (a) the router,
@@ -184,7 +207,40 @@ benchmarked.  At scale, where layers are thousands of dimensions wide and
 skills really do occupy different subspaces, projection may behave very
 differently.  That has to be tested there.
 
-REPLACE_EXTRA
+### Sleep as a transaction (audit + rollback)
+
+Because consolidation happens on the *other* hemisphere, a bad sleep can be
+undone for free.  Every skill now keeps held-out **retention probes** that are
+never trained on.  Before the hemispheres swap, both the awake snapshot (as
+served, with adapters routed in) and the consolidated student run those
+probes.  The sleep is **committed** only if no protected skill drops more than
+`commit_max_drop` (0.15) and every new skill clears the gate.  Otherwise it is
+**rolled back**: the student is discarded, the pending skills stay served by
+their adapters, and they are retried at the next sleep.  The audit report
+lists which skill regressed (`brain.history`).  This follows the
+"update-as-transaction" idea: forgetting becomes a detected, attributable and
+reversible event instead of a silent one.  A seed-1 rerun with the audit on is
+in `results/continual/rx_audit_s1.json` once finished.
+
+### Architecture ablation (base skills, trained from scratch, 1,000 steps)
+
+| variant | mean exact match @1k steps |
+|---|---|
+| full Recursion-X | 0.701 |
+| no Engram | 0.905 |
+| no Titans memory | 0.962 |
+| attention only (no liquid mixer) | 0.641 |
+| no looping (R = 1) | 0.597 |
+
+(`results/architecture/ablation_s0.json`, single seed.)  **Looping** (+0.10)
+and the **liquid mixer** (+0.06) speed up learning.  **Engram** and the
+**Titans memory** *slow* it on this benchmark, which is expected: inputs are
+random symbol strings, so there are no recurring n-grams to look up and no
+long-range structure to memorise.  Both components exist for real text and
+long contexts, and this suite cannot show their value.  A long-context recall
+test and a test-time depth-scaling test are in
+`experiments/architecture.py`.  The first attempt was too short to learn
+either task; longer reruns are in progress.
 
 ## Status and roadmap
 
@@ -193,8 +249,8 @@ What exists and is tested:
 * every architectural component, including causality tests, scan
   correctness, disk offload of experts and Engram rows, and Titans state
   carry-over across segments;
-* the full wake → gate → sleep → swap lifecycle, including background sleep
-  while serving;
+* the full wake → gate → sleep → audit → swap/rollback lifecycle, including
+  background sleep while serving;
 * a continual-learning benchmark with baselines, ablations and results.
 
 Next steps, roughly in order of expected value:

@@ -12,6 +12,7 @@ through whatever the method would *serve*.  Methods:
                    hemisphere sleep every 2 skills (REM: multi-teacher distillation
                    with stratified replay + dreams; protected subspaces grow so
                    that later adapters are projected away from baked knowledge)
+  rx_audit         rx + sleep-as-transaction audit (roll back a sleep that regresses)
   rx_merge         rx, but adapters are merged into the base before REM (NREM merge)
   rx_merge_only    merge + protection only, no REM
   rx_no_dreams     rx with replay only (no self-generated dreams)
@@ -116,7 +117,8 @@ METHODS = {
     "finetune": lambda m, log: run_finetune(m, False, log),
     "finetune_replay": lambda m, log: run_finetune(m, True, log),
     "lora_merge": run_lora_merge,
-    "rx": run_rx,
+    "rx": lambda m, log: run_rx(m, log, commit_check=False),
+    "rx_audit": run_rx,
     "rx_merge": lambda m, log: run_rx(m, log, nrem_merge=True),
     "rx_merge_only": lambda m, log: run_rx(m, log, nrem_merge=True, rem_steps=0),
     "rx_no_dreams": lambda m, log: run_rx(m, log, dream_frac=0.0),

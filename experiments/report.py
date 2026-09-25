@@ -10,7 +10,7 @@ from statistics import mean, pstdev
 
 from common import BASE_SKILLS, NEW_SKILLS, RUNS
 
-ORDER = ["finetune", "finetune_replay", "lora_merge", "rx_merge_only", "rx_gpm", "rx_unprojected", "rx",
+ORDER = ["finetune", "finetune_replay", "lora_merge", "rx_merge_only", "rx_gpm", "rx_unprojected", "rx", "rx_audit",
          "rx_grow"]
 
 
