@@ -39,7 +39,7 @@ class LifecycleConfig:
     dream_frac: float = 0.5       # fraction of rehearsal made of self-generated dreams
     dream_pool: int = 384
     dream_temperature: float = 1.0
-    gpm_strength: float = 1.0     # gradient projection during REM (0 = off)
+    gpm_strength: float = 0.0     # gradient projection during REM (0 = off; see README)
     gpm_threshold: float = 0.97
     max_protect_frac: float = 0.9
 

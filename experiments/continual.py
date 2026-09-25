@@ -10,11 +10,12 @@ through whatever the method would *serve*.  Methods:
   lora_merge       plain LoRA per skill, merged into the base right away
   rx               Recursion-X: projected LoRA wake learning -> gate -> dual-
                    hemisphere sleep every 2 skills (REM: multi-teacher distillation
-                   with stratified replay + dreams, GPM, subspace protection)
+                   with stratified replay + dreams; protected subspaces grow so
+                   that later adapters are projected away from baked knowledge)
   rx_merge         rx, but adapters are merged into the base before REM (NREM merge)
   rx_merge_only    merge + protection only, no REM
   rx_no_dreams     rx with replay only (no self-generated dreams)
-  rx_nogpm         rx with projected LoRA in wake but no gradient projection in REM
+  rx_gpm           rx + GPM gradient projection during REM
   rx_unprojected   rx with ordinary LoRA and no gradient projection
   rx_grow          rx with expert growth enabled during sleep
 """
@@ -119,8 +120,8 @@ METHODS = {
     "rx_merge": lambda m, log: run_rx(m, log, nrem_merge=True),
     "rx_merge_only": lambda m, log: run_rx(m, log, nrem_merge=True, rem_steps=0),
     "rx_no_dreams": lambda m, log: run_rx(m, log, dream_frac=0.0),
-    "rx_nogpm": lambda m, log: run_rx(m, log, gpm_strength=0.0),
-    "rx_unprojected": lambda m, log: run_rx(m, log, projected=False, data_init=False, gpm_strength=0.0),
+    "rx_gpm": lambda m, log: run_rx(m, log, gpm_strength=1.0),
+    "rx_unprojected": lambda m, log: run_rx(m, log, projected=False, data_init=False),
     "rx_grow": lambda m, log: run_rx(m, log, grow_experts=True),
 }
 
