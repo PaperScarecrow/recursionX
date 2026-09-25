@@ -28,8 +28,9 @@ class SkillRecord:
 
 @torch.no_grad()
 def prompt_features(model, inp: torch.Tensor) -> torch.Tensor:
-    """Mean prelude state over the prompt (tokens up to and including SEP),
-    computed on the *base* weights (no adapters)."""
+    """Prompt embedding from the *base* prelude (no adapters): the mean state
+    over the prompt (up to and including SEP) concatenated with the state at
+    the end of the prompt, which in a causal model summarises it."""
     with active_adapters(model, {}):
         x = model.embed(inp)
         if model.engram is not None:
@@ -39,42 +40,60 @@ def prompt_features(model, inp: torch.Tensor) -> torch.Tensor:
     is_sep = (inp == SEP).int()
     before = (is_sep.cumsum(1) - is_sep) == 0   # positions up to the first SEP
     mask = (before & (inp != PAD)).unsqueeze(-1).float()
-    return (x * mask).sum(1) / mask.sum(1).clamp_min(1)
+    mean = (x * mask).sum(1) / mask.sum(1).clamp_min(1)
+    last_pos = (mask.squeeze(-1).sum(1) - 1).long().clamp_min(0)
+    last = x[torch.arange(inp.shape[0]), last_pos]
+    return torch.cat([mean, last], -1)
 
 
 class SkillRouter:
-    """Nearest-prototype routing between the base and pending skill adapters.
+    """Routes a prompt to the skill it belongs to.
 
-    Every known skill (consolidated or pending) has a prototype.  A prompt is
-    routed to the adapter of its nearest prototype when that skill is still
-    pending (lives in an adapter); otherwise it runs on the base weights.
+    Every known skill (consolidated or pending) contributes exemplar features
+    from its stored episodes; a ridge-regression classifier over those
+    features picks the skill.  Prompts of pending skills run with that skill's
+    adapter; everything else runs on the base weights.
     """
 
-    def __init__(self):
-        self.prototypes: Dict[str, torch.Tensor] = {}
+    def __init__(self, ridge: float = 1e-2):
+        self.exemplars: Dict[str, torch.Tensor] = {}
         self.adapter_of: Dict[str, Optional[str]] = {}
+        self.ridge = ridge
+        self._fit = None
 
-    def register(self, name: str, proto: torch.Tensor, adapter: Optional[str]) -> None:
-        self.prototypes[name] = proto
+    def register(self, name: str, feats: torch.Tensor, adapter: Optional[str]) -> None:
+        self.exemplars[name] = feats if feats.dim() == 2 else feats.unsqueeze(0)
         self.adapter_of[name] = adapter
+        self._fit = None
 
     def set_adapter(self, name: str, adapter: Optional[str]) -> None:
         self.adapter_of[name] = adapter
 
-    def _centered(self):
-        names = list(self.prototypes)
-        P = torch.stack([self.prototypes[n] for n in names])
-        mu = P.mean(0, keepdim=True)
-        return names, torch.nn.functional.normalize(P - mu, dim=-1), mu
+    def _classifier(self):
+        if self._fit is None:
+            names = list(self.exemplars)
+            X = torch.cat([self.exemplars[n] for n in names]).double()
+            y = torch.cat([torch.full((self.exemplars[n].shape[0],), i) for i, n in enumerate(names)])
+            mu, sd = X.mean(0), X.std(0).clamp_min(1e-6)
+            Z = torch.cat([(X - mu) / sd, torch.ones(X.shape[0], 1, dtype=X.dtype)], 1)
+            Y = torch.nn.functional.one_hot(y, len(names)).double()
+            A = Z.t() @ Z + self.ridge * X.shape[0] * torch.eye(Z.shape[1], dtype=X.dtype)
+            W = torch.linalg.solve(A, Z.t() @ Y)
+            self._fit = (names, mu, sd, W)
+        return self._fit
+
+    @torch.no_grad()
+    def classify(self, model, inp: torch.Tensor) -> List[str]:
+        names, mu, sd, W = self._classifier()
+        X = prompt_features(model, inp).double()
+        Z = torch.cat([(X - mu) / sd, torch.ones(X.shape[0], 1, dtype=X.dtype)], 1)
+        return [names[i] for i in (Z @ W).argmax(-1).tolist()]
 
     @torch.no_grad()
     def route(self, model, inp: torch.Tensor) -> List[Optional[str]]:
-        if not self.prototypes:
+        if not self.exemplars:
             return [None] * inp.shape[0]
-        names, P, mu = self._centered()
-        f = torch.nn.functional.normalize(prompt_features(model, inp) - mu, dim=-1)
-        best = (f @ P.t()).argmax(-1)
-        return [self.adapter_of[names[i]] for i in best.tolist()]
+        return [self.adapter_of[n] for n in self.classify(model, inp)]
 
     def logits(self, model, inp: torch.Tensor, **kw) -> torch.Tensor:
         """Routed forward: each sequence runs with (at most) its own skill
@@ -93,5 +112,6 @@ class SkillRouter:
 
 
 def build_prototype(model, seqs: List[List[int]]) -> torch.Tensor:
+    """Exemplar features (one row per episode) used to train the router."""
     inp, _, _ = collate(seqs)
-    return prompt_features(model, inp).mean(0)
+    return prompt_features(model, inp)
