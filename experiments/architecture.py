@@ -102,7 +102,7 @@ def run_recall(steps, seed):
     es = EvalSet(task, 512)
     out = {}
     for name, kw in {"liquid_only": {"use_neural_memory": False},
-                     "liquid_only+titans": {"use_neural_memory": True}}.items():
+                     "liquid_only+titans": {"use_neural_memory": True, "mem_conv": 4}}.items():
         seed_all(seed)
         model = RecursionX(model_config(seed=seed, prelude_layers=("liquid",),
                                         core_layers=("liquid",), coda_layers=("liquid",),

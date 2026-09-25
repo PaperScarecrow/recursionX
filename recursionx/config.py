@@ -49,6 +49,7 @@ class RXConfig:
     mem_huber_delta: float = 1.0
     mem_max_lr: float = 1.0
     mem_max_decay: float = 0.2
+    mem_conv: int = 0              # Titans-style short conv on q/k/v (0 = off)
 
     # --- Engram: hashed n-gram lookup memory (host/disk offloadable) ----------
     use_engram: bool = True

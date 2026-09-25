@@ -36,7 +36,7 @@ MemState = Tuple[torch.Tensor, torch.Tensor]
 class NeuralMemory(nn.Module):
     def __init__(self, d_model: int, mem_dim: int = 64, chunk: int = 8, bias: str = "l2",
                  huber_delta: float = 1.0, max_lr: float = 1.0, max_decay: float = 0.2,
-                 init_std: float = 0.02):
+                 init_std: float = 0.02, conv_kernel: int = 0):
         super().__init__()
         assert bias in ("l2", "huber", "l1")
         self.dm, self.chunk, self.bias = mem_dim, chunk, bias
@@ -50,6 +50,19 @@ class NeuralMemory(nn.Module):
         nn.init.zeros_(self.hyper.weight)
         nn.init.constant_(self.hyper.bias, 0.0)
         self.M0 = nn.Parameter(torch.zeros(mem_dim, mem_dim))
+        # Titans runs q/k/v through a short causal depthwise conv so that a
+        # token's key/value can see its immediate neighbours (e.g. bind a value
+        # to the key right before it).
+        self.conv_kernel = conv_kernel
+        if conv_kernel:
+            self.qkv_conv = nn.Conv1d(3 * mem_dim, 3 * mem_dim, conv_kernel,
+                                      groups=3 * mem_dim, padding=conv_kernel - 1)
+
+    def _conv(self, q, k, v):
+        T = q.shape[1]
+        x = torch.cat([q, k, v], -1).transpose(1, 2)
+        x = self.qkv_conv(x)[..., :T].transpose(1, 2)
+        return x.chunk(3, dim=-1)
 
     def _err(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         e = pred - target  # d/dpred of 0.5||pred - v||^2
@@ -62,9 +75,10 @@ class NeuralMemory(nn.Module):
     def forward(self, x: torch.Tensor, state: Optional[MemState] = None
                 ) -> Tuple[torch.Tensor, MemState]:
         B, T, _ = x.shape
-        q = F.normalize(self.q(x), dim=-1)
-        k = F.normalize(self.k(x), dim=-1)
-        v = self.v(x)
+        q, k, v = self.q(x), self.k(x), self.v(x)
+        if self.conv_kernel:
+            q, k, v = self._conv(q, k, v)
+        q, k = F.normalize(q, dim=-1), F.normalize(k, dim=-1)
         hp = self.hyper(x)
         theta = torch.sigmoid(hp[..., 0]) * self.max_lr          # (B, T)
         eta = torch.sigmoid(hp[..., 1])

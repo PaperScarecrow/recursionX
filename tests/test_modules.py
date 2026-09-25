@@ -35,7 +35,8 @@ def test_liquid_scan_matches_recurrence():
 
 
 @pytest.mark.parametrize("kw", [{}, {"loop_sampling": "fixed", "n_loops": 3},
-                                {"use_engram": False, "use_neural_memory": False}])
+                                {"use_engram": False, "use_neural_memory": False},
+                                {"mem_conv": 4}])
 def test_model_is_causal(kw):
     torch.manual_seed(0)
     m = RecursionX(tiny_cfg(**kw)).eval()

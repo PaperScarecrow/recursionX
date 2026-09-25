@@ -75,7 +75,7 @@ class RecursionX(nn.Module):
         self.prelude = nn.ModuleList([Block(k, cfg) for k in cfg.prelude_layers])
         self.memory = (NeuralMemory(d, cfg.mem_dim, cfg.mem_chunk, cfg.mem_bias,
                                     cfg.mem_huber_delta, cfg.mem_max_lr, cfg.mem_max_decay,
-                                    cfg.init_std) if cfg.use_neural_memory else None)
+                                    cfg.init_std, cfg.mem_conv) if cfg.use_neural_memory else None)
         self.mem_norm = nn.RMSNorm(d)
         self.inject = AdaptableLinear(2 * d, d, init_std=cfg.init_std)
         self.inject_norm = nn.RMSNorm(d)
