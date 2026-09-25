@@ -115,10 +115,13 @@ a claim about language-model quality at scale.
 | Recursion-X + GPM in sleep | 1 | 0.870 | 0.941 | 0.799 | 0.983 | 0.055 | −0.220 | 91 |
 | Recursion-X, plain LoRA | 2 | 0.906 ± 0.016 | 0.965 ± 0.010 | 0.846 ± 0.041 | 0.901 ± 0.070 | 0.031 ± 0.010 | −0.066 ± 0.035 | 81 |
 | **Recursion-X** (projected LoRA, no GPM in sleep) | 2 | **0.922 ± 0.021** | 0.957 ± 0.003 | **0.886 ± 0.046** | 0.959 ± 0.035 | 0.039 ± 0.003 | −0.087 ± 0.013 | 90 |
+| **Recursion-X + sleep audit** (current default) | 1 (seed 1) | **0.953** | 0.973 | 0.934 | 0.924 | 0.024 | +0.013 | 87 |
 
 (`results/continual/`; ± is the spread over seeds.  Raw per-step accuracy
-matrices are in the JSON files.  The Recursion-X rows were run before the
-sleep audit below existed, so every sleep was committed.)
+matrices are in the JSON files.  The first two Recursion-X rows were run
+before the sleep audit below existed, so every sleep was committed.  The audit
+row reran seed 1 with it on; its fair comparison is seed 1 without the audit,
+which scored 0.900.)
 
 *avg_all*: final mean accuracy over all 12 skills.  *learn_acc*: accuracy on
 each new skill right after learning it.  *base_forgetting*: mean drop on the 6
