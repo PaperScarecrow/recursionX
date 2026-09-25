@@ -59,6 +59,18 @@ def evaluate(model, es: EvalSet, batch: int = 256, n_loops: Optional[int] = None
     return {"acc": correct_seq / n_seq, "tok_acc": correct_tok / max(n_tok, 1)}
 
 
+@torch.no_grad()
+def sequence_accuracy(model, seqs: List[List[int]], forward: Optional[Callable] = None) -> float:
+    """Exact-match accuracy on a list of raw sequences (e.g. retention probes)."""
+    inp, tgt, w = collate(seqs)
+    was = model.training
+    model.eval()
+    logits = forward(inp) if forward else model(inp).logits
+    model.train(was)
+    ok = (logits.argmax(-1) == tgt) | (w < 1.0)
+    return ok.all(-1).float().mean().item()
+
+
 def evaluate_all(model, evalsets: Dict[str, EvalSet], **kw) -> Dict[str, float]:
     return {k: evaluate(model, es, **kw)["acc"] for k, es in evalsets.items()}
 

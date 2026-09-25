@@ -81,3 +81,17 @@ def test_fact_ingestion_only_touches_engram():
     for n, p in brain.awake.named_parameters():
         if n in before:
             assert torch.equal(before[n], p), n
+
+
+def test_failed_audit_rolls_back_sleep():
+    brain, base = make_brain(sleep_pressure=99, commit_max_drop=-1.0)  # any change "regresses"
+    new = make_suite(["succ"], V, start_slot=5, max_len=5)
+    rec = SkillRecord("succ", new[0], new_tokens=[new[0].task_token])
+    brain.ingest(rec, EvalSet(new[0], 16))
+    awake = brain.awake
+    report = brain.sleep()
+    assert report["committed"] is False and report["audit"]["syndrome"]
+    assert brain.awake is awake and brain.cycles == 0          # nothing swapped
+    assert list_skills(brain.awake) == ["succ"]                 # still served by its adapter
+    assert [r.name for r in brain.pending] == ["succ"] and rec.status == "accepted"
+    assert brain.history[-1]["event"] == "sleep_rolled_back"

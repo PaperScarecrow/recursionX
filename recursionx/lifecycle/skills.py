@@ -18,6 +18,7 @@ class SkillRecord:
     kind: str = "skill"                # "skill" (procedural) | "fact" (declarative)
     status: str = "new"                # new -> learning -> accepted/rejected -> consolidated
     episodes: List[List[int]] = field(default_factory=list)   # replay buffer
+    probes: List[List[int]] = field(default_factory=list)     # held-out retention probes
     prototype: Optional[torch.Tensor] = None
     metrics: Dict[str, float] = field(default_factory=dict)
     new_tokens: List[int] = field(default_factory=list)

@@ -43,6 +43,11 @@ class LifecycleConfig:
     gpm_threshold: float = 0.97
     max_protect_frac: float = 0.9
 
+    # ---- sleep as a transaction: audit before the hemispheres swap ----------
+    commit_check: bool = True     # reject (roll back) a sleep that breaks the retention registry
+    commit_max_drop: float = 0.15 # max allowed drop on any protected skill's probes
+    probes_per_skill: int = 64    # held-out probes per skill (never trained on)
+
     # ---- growth ------------------------------------------------------------
     grow_experts: bool = False
     growth_acc_threshold: float = 0.9
