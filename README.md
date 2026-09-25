@@ -219,8 +219,18 @@ probes.  The sleep is **committed** only if no protected skill drops more than
 their adapters, and they are retried at the next sleep.  The audit report
 lists which skill regressed (`brain.history`).  This follows the
 "update-as-transaction" idea: forgetting becomes a detected, attributable and
-reversible event instead of a silent one.  A seed-1 rerun with the audit on is
-in `results/continual/rx_audit_s1.json` once finished.
+reversible event instead of a silent one.
+
+**Measured (seed 1 rerun, `results/continual/rx_audit_s1.json`):**
+* The first two sleeps passed the audit and were committed.
+* The third sleep (`add_first`, `first_last`) was **rolled back**, with the
+  syndrome `sort_desc: regressed 0.95 -> 0.72`.  The awake hemisphere kept
+  serving both new skills from their adapters.
+* Final served accuracy was **0.953** against 0.900 for the identical run
+  without the audit.  `sort_desc` stayed at 0.96 instead of 0.65, and
+  `add_first` at 0.68 instead of 0.48.
+* The trade-off: two skills remain unconsolidated (still adapters) until a
+  later sleep succeeds.
 
 ### Architecture ablation (base skills, trained from scratch, 1,000 steps)
 
@@ -237,10 +247,22 @@ and the **liquid mixer** (+0.06) speed up learning.  **Engram** and the
 **Titans memory** *slow* it on this benchmark, which is expected: inputs are
 random symbol strings, so there are no recurring n-grams to look up and no
 long-range structure to memorise.  Both components exist for real text and
-long contexts, and this suite cannot show their value.  A long-context recall
-test and a test-time depth-scaling test are in
-`experiments/architecture.py`.  The first attempt was too short to learn
-either task; longer reruns are in progress.
+long contexts, and this suite cannot show their value.
+
+Two more architecture tests (`experiments/architecture.py`, 3,000 steps,
+`results/architecture/`) did not produce positive results:
+
+* **Test-time depth.**  The model was trained with 1–4 sampled loops and
+  evaluated at R = 1…8.  Accuracy was flat (0.980 at R = 1, 0.984 at R = 2–8).
+  The base skills are too easy to need extra depth once trained.  The one
+  positive: running *beyond* the trained depth (R = 5–8) does not degrade
+  anything, so extra test-time loops are safe.  Showing depth *scaling*
+  needs harder, compositional tasks.
+* **Titans memory on associative recall** (liquid-only backbone, 8 key–value
+  pairs).  Accuracy was 0.264 without the memory and 0.270 with it (chance is
+  0.125).  Neither model learned the task at this scale and budget, so this is
+  inconclusive.  The memory still needs tuning (write-rate init, chunk size,
+  deep MLP memory) before it can be judged.
 
 ## Status and roadmap
 
