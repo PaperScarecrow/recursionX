@@ -33,7 +33,7 @@ from recursionx.lifecycle.wake import WakeLearner
 from recursionx.modules.lora import merge_skill
 from recursionx.train import evaluate, evaluate_all, train_loop
 
-WAKE_STEPS = 300
+WAKE_STEPS = 600
 FT_LR = 1e-3
 
 

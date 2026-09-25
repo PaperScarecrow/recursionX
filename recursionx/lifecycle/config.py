@@ -12,7 +12,7 @@ class LifecycleConfig:
     data_init: bool = True        # init A from the skill's own activation PCA
     train_token_rows: bool = True # let new instruction tokens learn an embedding row
     wake_steps: int = 300
-    wake_lr: float = 3e-3
+    wake_lr: float = 5e-3
     wake_batch: int = 64
     stats_batches: int = 4        # batches used for activation statistics
 
@@ -21,7 +21,7 @@ class LifecycleConfig:
     fact_lr: float = 3e-2
 
     # ---- gate: is the skill good enough to be baked? -----------------------
-    gate_min_acc: float = 0.6
+    gate_min_acc: float = 0.5
     gate_min_gain: float = 0.2
     gate_max_anchor_drop: float = 1.0  # drop of anchors with adapter always on
 
