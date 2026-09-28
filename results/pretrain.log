@@ -1,0 +1,25 @@
+params: 2,393,235 (w/o engram table 1,868,563)
+step 250/3000 loss 2.4215 (88s)
+  eval @250 (92s) copy=0.00 reverse=0.00 succ=0.00 sort=0.00 max=0.28 interleave=0.00
+step 500/3000 loss 1.4307 (177s)
+  eval @500 (180s) copy=0.80 reverse=0.20 succ=0.80 sort=0.13 max=0.82 interleave=0.40
+step 750/3000 loss 0.5326 (261s)
+  eval @750 (265s) copy=0.91 reverse=0.76 succ=0.91 sort=0.59 max=0.97 interleave=0.97
+step 1000/3000 loss 0.4180 (345s)
+  eval @1000 (348s) copy=0.96 reverse=0.98 succ=0.98 sort=0.67 max=0.98 interleave=0.99
+step 1250/3000 loss 0.3764 (428s)
+  eval @1250 (432s) copy=1.00 reverse=0.86 succ=1.00 sort=0.75 max=0.98 interleave=0.96
+step 1500/3000 loss 0.3482 (515s)
+  eval @1500 (519s) copy=0.99 reverse=0.98 succ=0.99 sort=0.85 max=0.99 interleave=1.00
+step 1750/3000 loss 0.3307 (601s)
+  eval @1750 (604s) copy=1.00 reverse=0.96 succ=0.99 sort=0.84 max=0.99 interleave=1.00
+step 2000/3000 loss 0.3218 (687s)
+  eval @2000 (690s) copy=1.00 reverse=1.00 succ=1.00 sort=0.90 max=0.99 interleave=1.00
+step 2250/3000 loss 0.3157 (770s)
+  eval @2250 (773s) copy=1.00 reverse=1.00 succ=1.00 sort=0.93 max=1.00 interleave=1.00
+step 2500/3000 loss 0.3112 (854s)
+  eval @2500 (858s) copy=1.00 reverse=1.00 succ=1.00 sort=0.96 max=1.00 interleave=1.00
+step 2750/3000 loss 0.3093 (936s)
+  eval @2750 (939s) copy=1.00 reverse=1.00 succ=1.00 sort=0.95 max=1.00 interleave=1.00
+step 3000/3000 loss 0.3091 (1019s)
+  eval @3000 (1022s) copy=1.00 reverse=1.00 succ=1.00 sort=0.98 max=1.00 interleave=1.00

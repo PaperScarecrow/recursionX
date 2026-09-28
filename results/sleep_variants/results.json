@@ -1,0 +1,78 @@
+{
+  "awake(served)": {
+    "copy": 1.0,
+    "reverse": 1.0,
+    "succ": 1.0,
+    "sort": 0.98046875,
+    "max": 1.0,
+    "interleave": 1.0,
+    "rotl": 0.67578125,
+    "pred": 0.99609375
+  },
+  "merge+rem300": {
+    "copy": 1.0,
+    "reverse": 0.93359375,
+    "succ": 1.0,
+    "sort": 0.78515625,
+    "max": 0.98046875,
+    "interleave": 0.40234375,
+    "rotl": 0.890625,
+    "pred": 1.0,
+    "sleep_seconds": 333.9971532821655
+  },
+  "nomerge+rem300": {
+    "copy": 1.0,
+    "reverse": 0.9453125,
+    "succ": 1.0,
+    "sort": 0.93359375,
+    "max": 0.99609375,
+    "interleave": 0.94140625,
+    "rotl": 0.41015625,
+    "pred": 1.0,
+    "sleep_seconds": 333.3466260433197
+  },
+  "merge+rem300+balanced": {
+    "copy": 0.99609375,
+    "reverse": 0.98046875,
+    "succ": 1.0,
+    "sort": 0.8046875,
+    "max": 0.98046875,
+    "interleave": 0.671875,
+    "rotl": 0.921875,
+    "pred": 1.0,
+    "sleep_seconds": 475.267377614975
+  },
+  "nomerge+rem300+balanced": {
+    "copy": 1.0,
+    "reverse": 0.96875,
+    "succ": 1.0,
+    "sort": 0.92578125,
+    "max": 0.99609375,
+    "interleave": 0.953125,
+    "rotl": 0.64453125,
+    "pred": 1.0,
+    "sleep_seconds": 481.27417635917664
+  },
+  "nomerge+rem600+balanced": {
+    "copy": 1.0,
+    "reverse": 0.953125,
+    "succ": 1.0,
+    "sort": 0.9296875,
+    "max": 1.0,
+    "interleave": 0.98046875,
+    "rotl": 1.0,
+    "pred": 1.0,
+    "sleep_seconds": 945.4590270519257
+  },
+  "merge_only": {
+    "copy": 0.0234375,
+    "reverse": 0.0,
+    "succ": 0.0859375,
+    "sort": 0.171875,
+    "max": 0.5859375,
+    "interleave": 0.0,
+    "rotl": 0.0,
+    "pred": 0.0,
+    "sleep_seconds": 1.161381721496582
+  }
+}

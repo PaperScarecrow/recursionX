@@ -1,0 +1,92 @@
+base model: {'copy': 1.0, 'reverse': 1.0, 'succ': 1.0, 'sort': 0.945, 'max': 1.0, 'interleave': 1.0, 'rotl': 0.0, 'pred': 0.0, 'swap_pairs': 0.0, 'sort_desc': 0.008, 'add_first': 0.0, 'first_last': 0.0}
+=== rx_audit_p1_rem1200 ===
+  gate rotl: accepted=True, acc_base=0.00, acc_skill=1.00, gain=1.00, merge_preview_max_anchor_drop=0.98
+[rem] step 100/1200 loss 3.2565 (15s)
+[rem] step 200/1200 loss 0.8561 (31s)
+[rem] step 300/1200 loss 0.6119 (46s)
+[rem] step 400/1200 loss 0.5921 (62s)
+[rem] step 500/1200 loss 0.5958 (77s)
+[rem] step 600/1200 loss 0.5882 (93s)
+[rem] step 700/1200 loss 0.5859 (109s)
+[rem] step 800/1200 loss 0.5836 (125s)
+[rem] step 900/1200 loss 0.5850 (141s)
+[rem] step 1000/1200 loss 0.5802 (156s)
+[rem] step 1100/1200 loss 0.5782 (172s)
+[rem] step 1200/1200 loss 0.5769 (187s)
+  sleep: {'skills': ['rotl'], 'n_dreams': 384, 'rem_final_loss': 0.5764363646507263, 'protected_fraction': 0.16201117318435754, 'seconds': 189.30792880058289, 'audit': {'commit': True, 'syndrome': [], 'probes': {'copy': {'before': 1.0, 'after': 1.0}, 'reverse': {'before': 1.0, 'after': 0.984375}, 'succ': {'before': 1.0, 'after': 1.0}, 'sort': {'before': 0.96875, 'after': 0.859375}, 'max': {'before': 1.0, 'after': 1.0}, 'interleave': {'before': 1.0, 'after': 1.0}, 'rotl': {'before': 1.0, 'after': 1.0}}}, 'cycle': 1, 'committed': True}
+  [rx_audit_p1_rem1200] after rotl (241s): copy=1.00 reverse=0.98 succ=1.00 sort=0.89 max=0.99 interleave=1.00 rotl=1.00 pred=0.00 swap_pairs=0.01 sort_desc=0.05 add_first=0.00 first_last=0.00
+  gate pred: accepted=True, acc_base=0.00, acc_skill=1.00, gain=1.00, merge_preview_max_anchor_drop=1.00
+[rem] step 100/1200 loss 4.4101 (9s)
+[rem] step 200/1200 loss 0.6231 (19s)
+[rem] step 300/1200 loss 0.5973 (28s)
+[rem] step 400/1200 loss 0.5825 (37s)
+[rem] step 500/1200 loss 0.5828 (46s)
+[rem] step 600/1200 loss 0.5780 (57s)
+[rem] step 700/1200 loss 0.5695 (73s)
+[rem] step 800/1200 loss 0.5668 (88s)
+[rem] step 900/1200 loss 0.5637 (103s)
+[rem] step 1000/1200 loss 0.5601 (118s)
+[rem] step 1100/1200 loss 0.5577 (133s)
+[rem] step 1200/1200 loss 0.5558 (147s)
+  sleep: {'skills': ['pred'], 'n_dreams': 384, 'rem_final_loss': 0.5540462106466293, 'protected_fraction': 0.19186452513966482, 'seconds': 148.79732131958008, 'audit': {'commit': True, 'syndrome': [], 'probes': {'copy': {'before': 1.0, 'after': 1.0}, 'reverse': {'before': 0.984375, 'after': 0.984375}, 'succ': {'before': 1.0, 'after': 1.0}, 'sort': {'before': 0.859375, 'after': 0.796875}, 'max': {'before': 1.0, 'after': 1.0}, 'interleave': {'before': 1.0, 'after': 1.0}, 'rotl': {'before': 1.0, 'after': 0.984375}, 'pred': {'before': 1.0, 'after': 1.0}}}, 'cycle': 2, 'committed': True}
+  [rx_audit_p1_rem1200] after pred (436s): copy=0.99 reverse=0.98 succ=1.00 sort=0.85 max=0.98 interleave=1.00 rotl=0.97 pred=1.00 swap_pairs=0.00 sort_desc=0.02 add_first=0.00 first_last=0.00
+  gate swap_pairs: accepted=True, acc_base=0.00, acc_skill=1.00, gain=1.00, merge_preview_max_anchor_drop=1.00
+[rem] step 100/1200 loss 2.2730 (15s)
+[rem] step 200/1200 loss 0.5872 (31s)
+[rem] step 300/1200 loss 0.5600 (46s)
+[rem] step 400/1200 loss 0.5476 (61s)
+[rem] step 500/1200 loss 0.5521 (76s)
+[rem] step 600/1200 loss 0.5365 (91s)
+[rem] step 700/1200 loss 0.5301 (107s)
+[rem] step 800/1200 loss 0.5267 (123s)
+[rem] step 900/1200 loss 0.5210 (138s)
+[rem] step 1000/1200 loss 0.5181 (154s)
+[rem] step 1100/1200 loss 0.5159 (169s)
+[rem] step 1200/1200 loss 0.5142 (185s)
+  sleep: {'skills': ['swap_pairs'], 'n_dreams': 384, 'rem_final_loss': 0.5127695769071579, 'protected_fraction': 0.2253840782122905, 'seconds': 187.1941418647766, 'audit': {'commit': True, 'syndrome': [], 'probes': {'copy': {'before': 1.0, 'after': 1.0}, 'reverse': {'before': 0.984375, 'after': 0.953125}, 'succ': {'before': 1.0, 'after': 1.0}, 'sort': {'before': 0.796875, 'after': 0.796875}, 'max': {'before': 1.0, 'after': 0.984375}, 'interleave': {'before': 1.0, 'after': 1.0}, 'rotl': {'before': 0.984375, 'after': 0.984375}, 'pred': {'before': 1.0, 'after': 0.953125}, 'swap_pairs': {'before': 1.0, 'after': 1.0}}}, 'cycle': 3, 'committed': True}
+  [rx_audit_p1_rem1200] after swap_pairs (673s): copy=0.99 reverse=0.98 succ=1.00 sort=0.82 max=0.97 interleave=0.98 rotl=0.98 pred=1.00 swap_pairs=1.00 sort_desc=0.04 add_first=0.00 first_last=0.00
+  gate sort_desc: accepted=True, acc_base=0.04, acc_skill=0.96, gain=0.93, merge_preview_max_anchor_drop=1.00
+[rem] step 100/1200 loss 5.5650 (16s)
+[rem] step 200/1200 loss 2.5711 (28s)
+[rem] step 300/1200 loss 1.6880 (38s)
+[rem] step 400/1200 loss 1.0956 (47s)
+[rem] step 500/1200 loss 0.8476 (57s)
+[rem] step 600/1200 loss 0.7511 (67s)
+[rem] step 700/1200 loss 0.7052 (77s)
+[rem] step 800/1200 loss 0.6738 (86s)
+[rem] step 900/1200 loss 0.6409 (96s)
+[rem] step 1000/1200 loss 0.6327 (106s)
+[rem] step 1100/1200 loss 0.6153 (116s)
+[rem] step 1200/1200 loss 0.6125 (125s)
+  sleep: {'skills': ['sort_desc'], 'n_dreams': 384, 'rem_final_loss': 0.6055742293596268, 'protected_fraction': 0.25541201117318435, 'seconds': 127.55059146881104, 'audit': {'commit': False, 'syndrome': ['swap_pairs: regressed 1.00 -> 0.75'], 'probes': {'copy': {'before': 1.0, 'after': 0.96875}, 'reverse': {'before': 0.953125, 'after': 0.984375}, 'succ': {'before': 1.0, 'after': 0.984375}, 'sort': {'before': 0.796875, 'after': 0.796875}, 'max': {'before': 0.984375, 'after': 0.984375}, 'interleave': {'before': 1.0, 'after': 0.984375}, 'rotl': {'before': 0.984375, 'after': 0.921875}, 'pred': {'before': 0.953125, 'after': 0.8125}, 'swap_pairs': {'before': 1.0, 'after': 0.75}, 'sort_desc': {'before': 0.953125, 'after': 0.96875}}}, 'cycle': 3, 'committed': False}
+  [rx_audit_p1_rem1200] after sort_desc (851s): copy=0.99 reverse=0.98 succ=1.00 sort=0.82 max=0.97 interleave=0.98 rotl=0.98 pred=1.00 swap_pairs=1.00 sort_desc=0.96 add_first=0.00 first_last=0.00
+  gate add_first: accepted=True, acc_base=0.00, acc_skill=0.98, gain=0.98, merge_preview_max_anchor_drop=1.00
+[rem] step 100/1200 loss 11.5646 (17s)
+[rem] step 200/1200 loss 5.7101 (42s)
+[rem] step 300/1200 loss 3.9895 (66s)
+[rem] step 400/1200 loss 2.9477 (91s)
+[rem] step 500/1200 loss 2.3975 (114s)
+[rem] step 600/1200 loss 1.9879 (137s)
+[rem] step 700/1200 loss 1.6869 (160s)
+[rem] step 800/1200 loss 1.4998 (183s)
+[rem] step 900/1200 loss 1.4143 (208s)
+[rem] step 1000/1200 loss 1.3382 (232s)
+[rem] step 1100/1200 loss 1.2927 (257s)
+[rem] step 1200/1200 loss 1.2712 (281s)
+  sleep: {'skills': ['sort_desc', 'add_first'], 'n_dreams': 384, 'rem_final_loss': 1.2532743334770202, 'protected_fraction': 0.26387918994413406, 'seconds': 282.6082351207733, 'audit': {'commit': False, 'syndrome': ['rotl: regressed 0.98 -> 0.72', 'swap_pairs: regressed 1.00 -> 0.55'], 'probes': {'copy': {'before': 1.0, 'after': 1.0}, 'reverse': {'before': 0.953125, 'after': 0.859375}, 'succ': {'before': 1.0, 'after': 1.0}, 'sort': {'before': 0.796875, 'after': 0.78125}, 'max': {'before': 0.984375, 'after': 0.984375}, 'interleave': {'before': 1.0, 'after': 0.96875}, 'rotl': {'before': 0.984375, 'after': 0.71875}, 'pred': {'before': 0.953125, 'after': 0.875}, 'swap_pairs': {'before': 1.0, 'after': 0.546875}, 'sort_desc': {'before': 0.953125, 'after': 0.859375}, 'add_first': {'before': 1.0, 'after': 1.0}}}, 'cycle': 3, 'committed': False}
+  [rx_audit_p1_rem1200] after add_first (1171s): copy=0.99 reverse=0.98 succ=1.00 sort=0.82 max=0.97 interleave=0.98 rotl=0.98 pred=1.00 swap_pairs=1.00 sort_desc=0.96 add_first=0.98 first_last=0.00
+  gate first_last: accepted=True, acc_base=0.00, acc_skill=1.00, gain=1.00, merge_preview_max_anchor_drop=1.00
+[rem] step 100/1200 loss 17.2781 (31s)
+[rem] step 200/1200 loss 8.4153 (61s)
+[rem] step 300/1200 loss 6.2347 (91s)
+[rem] step 400/1200 loss 4.8168 (121s)
+[rem] step 500/1200 loss 3.8384 (151s)
+[rem] step 600/1200 loss 3.3081 (182s)
+[rem] step 700/1200 loss 2.9053 (214s)
+[rem] step 800/1200 loss 2.6261 (245s)
+[rem] step 900/1200 loss 2.4214 (274s)
+[rem] step 1000/1200 loss 2.2699 (305s)
+[rem] step 1100/1200 loss 2.1682 (336s)
+[rem] step 1200/1200 loss 2.1108 (365s)
+  sleep: {'skills': ['sort_desc', 'add_first', 'first_last'], 'n_dreams': 384, 'rem_final_loss': 2.1168264985084533, 'protected_fraction': 0.26920391061452514, 'seconds': 367.745938539505, 'audit': {'commit': False, 'syndrome': ['reverse: regressed 0.95 -> 0.73', 'swap_pairs: regressed 1.00 -> 0.59'], 'probes': {'copy': {'before': 1.0, 'after': 1.0}, 'reverse': {'before': 0.953125, 'after': 0.734375}, 'succ': {'before': 1.0, 'after': 0.96875}, 'sort': {'before': 0.796875, 'after': 0.71875}, 'max': {'before': 0.984375, 'after': 1.0}, 'interleave': {'before': 1.0, 'after': 0.921875}, 'rotl': {'before': 0.984375, 'after': 0.859375}, 'pred': {'before': 0.953125, 'after': 0.828125}, 'swap_pairs': {'before': 1.0, 'after': 0.59375}, 'sort_desc': {'before': 0.953125, 'after': 0.734375}, 'add_first': {'before': 1.0, 'after': 0.859375}, 'first_last': {'before': 1.0, 'after': 1.0}}}, 'cycle': 3, 'committed': False}
+  [rx_audit_p1_rem1200] after first_last (1587s): copy=0.99 reverse=0.98 succ=1.00 sort=0.82 max=0.97 interleave=0.98 rotl=0.98 pred=1.00 swap_pairs=1.00 sort_desc=0.96 add_first=0.98 first_last=1.00

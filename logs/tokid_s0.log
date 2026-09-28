@@ -1,0 +1,19 @@
+wake rotl: acc=1.000
+wake pred: acc=1.000
+wake swap_pairs: acc=1.000
+wake sort_desc: acc=0.984
+wake add_first: acc=0.738
+wake first_last: acc=1.000
+copy: ridge=1.00 tokid=1.00 oracle=1.00
+reverse: ridge=1.00 tokid=1.00 oracle=1.00
+succ: ridge=1.00 tokid=1.00 oracle=1.00
+sort: ridge=0.95 tokid=0.95 oracle=0.95
+max: ridge=1.00 tokid=1.00 oracle=1.00
+interleave: ridge=1.00 tokid=1.00 oracle=1.00
+rotl: ridge=0.99 tokid=1.00 oracle=1.00
+pred: ridge=0.57 tokid=1.00 oracle=1.00
+swap_pairs: ridge=0.45 tokid=1.00 oracle=1.00
+sort_desc: ridge=0.73 tokid=0.98 oracle=0.98
+add_first: ridge=0.73 tokid=0.74 oracle=0.74
+first_last: ridge=0.96 tokid=1.00 oracle=1.00
+saved ceiling probe

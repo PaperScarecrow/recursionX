@@ -1,0 +1,7 @@
+after rotl 0.553
+after pred 0.608
+after swap_pairs 0.692
+after sort_desc 0.739
+after add_first 0.812
+after first_last 0.84
+done 497.48247742652893

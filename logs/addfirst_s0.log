@@ -1,0 +1,9 @@
+wake rotl: 1.000
+sleep rotl: committed=True []
+wake pred: 1.000
+sleep pred: committed=True []
+wake swap_pairs: 1.000
+sleep swap_pairs: committed=True []
+protected_fraction=0.195
+add_first PROJECTED: accepted=False acc=0.000
+add_first PLAIN: acc=0.004

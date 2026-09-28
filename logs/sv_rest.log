@@ -1,0 +1,23 @@
+awake served: {'copy': 1.0, 'reverse': 1.0, 'succ': 1.0, 'sort': 0.9453125, 'max': 1.0, 'interleave': 1.0, 'rotl': 0.96484375, 'pred': 0.98828125}
+[rem] step 100/600 loss 5.5186 (15s)
+[rem] step 200/600 loss 1.0252 (31s)
+[rem] step 300/600 loss 0.8882 (46s)
+[rem] step 400/600 loss 0.8770 (61s)
+[rem] step 500/600 loss 0.8721 (76s)
+[rem] step 600/600 loss 0.8718 (91s)
+[merge+rem300+balanced] copy=1.00 reverse=1.00 succ=1.00 sort=0.84 max=0.99 interleave=1.00 rotl=1.00 pred=1.00
+[rem] step 100/600 loss 8.4723 (15s)
+[rem] step 200/600 loss 1.3305 (30s)
+[rem] step 300/600 loss 0.8934 (45s)
+[rem] step 400/600 loss 0.8757 (59s)
+[rem] step 500/600 loss 0.8725 (73s)
+[rem] step 600/600 loss 0.8717 (87s)
+[nomerge+rem300+balanced] copy=1.00 reverse=1.00 succ=1.00 sort=0.90 max=0.99 interleave=1.00 rotl=1.00 pred=1.00
+[rem] step 100/600 loss 8.4723 (14s)
+[rem] step 200/600 loss 1.3305 (28s)
+[rem] step 300/600 loss 0.8934 (42s)
+[rem] step 400/600 loss 0.8757 (56s)
+[rem] step 500/600 loss 0.8725 (70s)
+[rem] step 600/600 loss 0.8717 (84s)
+[nomerge+rem600+balanced] copy=1.00 reverse=1.00 succ=1.00 sort=0.90 max=0.99 interleave=1.00 rotl=1.00 pred=1.00
+[merge_only] copy=1.00 reverse=1.00 succ=1.00 sort=0.95 max=1.00 interleave=1.00 rotl=0.96 pred=0.99

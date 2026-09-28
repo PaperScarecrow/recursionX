@@ -1,0 +1,19 @@
+wake rotl: accepted=True acc=1.000
+wake pred: accepted=True acc=1.000
+wake swap_pairs: accepted=True acc=1.000
+wake sort_desc: accepted=True acc=0.984
+wake add_first: accepted=True acc=0.738
+wake first_last: accepted=True acc=1.000
+copy: served=1.00 oracle=1.00 base=1.00 routes={'base': 256}
+reverse: served=1.00 oracle=1.00 base=1.00 routes={'base': 256}
+succ: served=1.00 oracle=1.00 base=1.00 routes={'base': 256}
+sort: served=0.95 oracle=0.95 base=0.95 routes={'base': 256}
+max: served=1.00 oracle=1.00 base=1.00 routes={'base': 256}
+interleave: served=1.00 oracle=1.00 base=1.00 routes={'base': 256}
+rotl: served=0.99 oracle=1.00 base=0.00 routes={'rotl': 254, 'first_last': 2}
+pred: served=0.57 oracle=1.00 base=0.00 routes={'pred': 145, 'first_last': 35, 'swap_pairs': 36, 'add_first': 7, 'rotl': 16, 'sort_desc': 17}
+swap_pairs: served=0.45 oracle=1.00 base=0.00 routes={'swap_pairs': 114, 'add_first': 84, 'sort_desc': 9, 'pred': 31, 'rotl': 18}
+sort_desc: served=0.73 oracle=0.98 base=0.01 routes={'add_first': 49, 'pred': 10, 'sort_desc': 190, 'first_last': 3, 'swap_pairs': 4}
+add_first: served=0.73 oracle=0.74 base=0.00 routes={'add_first': 255, 'swap_pairs': 1}
+first_last: served=0.96 oracle=1.00 base=0.00 routes={'first_last': 246, 'rotl': 4, 'sort_desc': 3, 'pred': 3}
+saved runs/router_probe/probe_s0.json
