@@ -1,0 +1,8 @@
+base model: {'copy': 1.0, 'reverse': 1.0, 'succ': 1.0, 'sort': 0.945, 'max': 1.0, 'interleave': 1.0, 'rotl': 0.0, 'pred': 0.0, 'swap_pairs': 0.0, 'sort_desc': 0.008, 'add_first': 0.0, 'first_last': 0.0}
+=== finetune_replay ===
+  [finetune_replay] after rotl (31s): copy=1.00 reverse=1.00 succ=1.00 sort=0.82 max=0.98 interleave=1.00 rotl=1.00 pred=0.00 swap_pairs=0.01 sort_desc=0.05 add_first=0.00 first_last=0.00
+  [finetune_replay] after pred (61s): copy=1.00 reverse=0.82 succ=1.00 sort=0.76 max=0.98 interleave=0.99 rotl=0.96 pred=1.00 swap_pairs=0.00 sort_desc=0.00 add_first=0.01 first_last=0.00
+  [finetune_replay] after swap_pairs (92s): copy=1.00 reverse=0.84 succ=1.00 sort=0.77 max=0.99 interleave=0.99 rotl=1.00 pred=0.96 swap_pairs=1.00 sort_desc=0.04 add_first=0.00 first_last=0.00
+  [finetune_replay] after sort_desc (123s): copy=0.99 reverse=0.76 succ=0.97 sort=0.70 max=0.96 interleave=1.00 rotl=0.86 pred=0.71 swap_pairs=0.43 sort_desc=0.74 add_first=0.00 first_last=0.00
+  [finetune_replay] after add_first (154s): copy=1.00 reverse=0.82 succ=1.00 sort=0.62 max=0.98 interleave=0.98 rotl=0.87 pred=0.94 swap_pairs=0.62 sort_desc=0.31 add_first=0.22 first_last=0.00
+  [finetune_replay] after first_last (184s): copy=0.98 reverse=0.79 succ=0.98 sort=0.64 max=0.97 interleave=0.98 rotl=0.95 pred=0.88 swap_pairs=0.69 sort_desc=0.38 add_first=0.07 first_last=1.00

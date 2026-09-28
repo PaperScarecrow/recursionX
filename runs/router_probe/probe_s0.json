@@ -1,0 +1,316 @@
+{
+  "gaps": {
+    "copy": {
+      "served": 1.0,
+      "oracle": 1.0,
+      "base": 1.0,
+      "routing_loss": 0.0
+    },
+    "reverse": {
+      "served": 1.0,
+      "oracle": 1.0,
+      "base": 1.0,
+      "routing_loss": 0.0
+    },
+    "succ": {
+      "served": 1.0,
+      "oracle": 1.0,
+      "base": 1.0,
+      "routing_loss": 0.0
+    },
+    "sort": {
+      "served": 0.9453125,
+      "oracle": 0.9453125,
+      "base": 0.9453125,
+      "routing_loss": 0.0
+    },
+    "max": {
+      "served": 1.0,
+      "oracle": 1.0,
+      "base": 1.0,
+      "routing_loss": 0.0
+    },
+    "interleave": {
+      "served": 1.0,
+      "oracle": 1.0,
+      "base": 1.0,
+      "routing_loss": 0.0
+    },
+    "rotl": {
+      "served": 0.9921875,
+      "oracle": 1.0,
+      "base": 0.0,
+      "routing_loss": 0.0078125
+    },
+    "pred": {
+      "served": 0.56640625,
+      "oracle": 1.0,
+      "base": 0.0,
+      "routing_loss": 0.43359375
+    },
+    "swap_pairs": {
+      "served": 0.4453125,
+      "oracle": 1.0,
+      "base": 0.0,
+      "routing_loss": 0.5546875
+    },
+    "sort_desc": {
+      "served": 0.734375,
+      "oracle": 0.984375,
+      "base": 0.0078125,
+      "routing_loss": 0.25
+    },
+    "add_first": {
+      "served": 0.734375,
+      "oracle": 0.73828125,
+      "base": 0.0,
+      "routing_loss": 0.00390625
+    },
+    "first_last": {
+      "served": 0.9609375,
+      "oracle": 1.0,
+      "base": 0.0,
+      "routing_loss": 0.0390625
+    }
+  },
+  "confusion": {
+    "copy": {
+      "base": 256
+    },
+    "reverse": {
+      "base": 256
+    },
+    "succ": {
+      "base": 256
+    },
+    "sort": {
+      "base": 256
+    },
+    "max": {
+      "base": 256
+    },
+    "interleave": {
+      "base": 256
+    },
+    "rotl": {
+      "rotl": 254,
+      "first_last": 2
+    },
+    "pred": {
+      "pred": 145,
+      "first_last": 35,
+      "swap_pairs": 36,
+      "add_first": 7,
+      "rotl": 16,
+      "sort_desc": 17
+    },
+    "swap_pairs": {
+      "swap_pairs": 114,
+      "add_first": 84,
+      "sort_desc": 9,
+      "pred": 31,
+      "rotl": 18
+    },
+    "sort_desc": {
+      "add_first": 49,
+      "pred": 10,
+      "sort_desc": 190,
+      "first_last": 3,
+      "swap_pairs": 4
+    },
+    "add_first": {
+      "add_first": 255,
+      "swap_pairs": 1
+    },
+    "first_last": {
+      "first_last": 246,
+      "rotl": 4,
+      "sort_desc": 3,
+      "pred": 3
+    }
+  },
+  "names": [
+    "copy",
+    "reverse",
+    "succ",
+    "sort",
+    "max",
+    "interleave",
+    "rotl",
+    "pred",
+    "swap_pairs",
+    "sort_desc",
+    "add_first",
+    "first_last"
+  ],
+  "cosine": {
+    "copy": {
+      "copy": 1.0,
+      "reverse": 0.645,
+      "succ": 0.994,
+      "sort": 0.787,
+      "max": 0.689,
+      "interleave": 0.984,
+      "rotl": 0.945,
+      "pred": 0.927,
+      "swap_pairs": 0.907,
+      "sort_desc": 0.909,
+      "add_first": 0.86,
+      "first_last": 0.936
+    },
+    "reverse": {
+      "copy": 0.645,
+      "reverse": 1.0,
+      "succ": 0.693,
+      "sort": 0.626,
+      "max": 0.852,
+      "interleave": 0.579,
+      "rotl": 0.811,
+      "pred": 0.828,
+      "swap_pairs": 0.852,
+      "sort_desc": 0.839,
+      "add_first": 0.896,
+      "first_last": 0.799
+    },
+    "succ": {
+      "copy": 0.994,
+      "reverse": 0.693,
+      "succ": 1.0,
+      "sort": 0.766,
+      "max": 0.74,
+      "interleave": 0.965,
+      "rotl": 0.953,
+      "pred": 0.938,
+      "swap_pairs": 0.922,
+      "sort_desc": 0.921,
+      "add_first": 0.884,
+      "first_last": 0.94
+    },
+    "sort": {
+      "copy": 0.787,
+      "reverse": 0.626,
+      "succ": 0.766,
+      "sort": 1.0,
+      "max": 0.659,
+      "interleave": 0.822,
+      "rotl": 0.878,
+      "pred": 0.885,
+      "swap_pairs": 0.879,
+      "sort_desc": 0.89,
+      "add_first": 0.849,
+      "first_last": 0.897
+    },
+    "max": {
+      "copy": 0.689,
+      "reverse": 0.852,
+      "succ": 0.74,
+      "sort": 0.659,
+      "max": 1.0,
+      "interleave": 0.608,
+      "rotl": 0.824,
+      "pred": 0.841,
+      "swap_pairs": 0.858,
+      "sort_desc": 0.843,
+      "add_first": 0.895,
+      "first_last": 0.81
+    },
+    "interleave": {
+      "copy": 0.984,
+      "reverse": 0.579,
+      "succ": 0.965,
+      "sort": 0.822,
+      "max": 0.608,
+      "interleave": 1.0,
+      "rotl": 0.926,
+      "pred": 0.907,
+      "swap_pairs": 0.883,
+      "sort_desc": 0.89,
+      "add_first": 0.823,
+      "first_last": 0.925
+    },
+    "rotl": {
+      "copy": 0.945,
+      "reverse": 0.811,
+      "succ": 0.953,
+      "sort": 0.878,
+      "max": 0.824,
+      "interleave": 0.926,
+      "rotl": 1.0,
+      "pred": 0.997,
+      "swap_pairs": 0.992,
+      "sort_desc": 0.993,
+      "add_first": 0.974,
+      "first_last": 0.997
+    },
+    "pred": {
+      "copy": 0.927,
+      "reverse": 0.828,
+      "succ": 0.938,
+      "sort": 0.885,
+      "max": 0.841,
+      "interleave": 0.907,
+      "rotl": 0.997,
+      "pred": 1.0,
+      "swap_pairs": 0.998,
+      "sort_desc": 0.998,
+      "add_first": 0.984,
+      "first_last": 0.997
+    },
+    "swap_pairs": {
+      "copy": 0.907,
+      "reverse": 0.852,
+      "succ": 0.922,
+      "sort": 0.879,
+      "max": 0.858,
+      "interleave": 0.883,
+      "rotl": 0.992,
+      "pred": 0.998,
+      "swap_pairs": 1.0,
+      "sort_desc": 0.999,
+      "add_first": 0.992,
+      "first_last": 0.992
+    },
+    "sort_desc": {
+      "copy": 0.909,
+      "reverse": 0.839,
+      "succ": 0.921,
+      "sort": 0.89,
+      "max": 0.843,
+      "interleave": 0.89,
+      "rotl": 0.993,
+      "pred": 0.998,
+      "swap_pairs": 0.999,
+      "sort_desc": 1.0,
+      "add_first": 0.989,
+      "first_last": 0.995
+    },
+    "add_first": {
+      "copy": 0.86,
+      "reverse": 0.896,
+      "succ": 0.884,
+      "sort": 0.849,
+      "max": 0.895,
+      "interleave": 0.823,
+      "rotl": 0.974,
+      "pred": 0.984,
+      "swap_pairs": 0.992,
+      "sort_desc": 0.989,
+      "add_first": 1.0,
+      "first_last": 0.972
+    },
+    "first_last": {
+      "copy": 0.936,
+      "reverse": 0.799,
+      "succ": 0.94,
+      "sort": 0.897,
+      "max": 0.81,
+      "interleave": 0.925,
+      "rotl": 0.997,
+      "pred": 0.997,
+      "swap_pairs": 0.992,
+      "sort_desc": 0.995,
+      "add_first": 0.972,
+      "first_last": 1.0
+    }
+  }
+}

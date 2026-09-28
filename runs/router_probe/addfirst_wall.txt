@@ -1,0 +1,1 @@
+projected=0.000 plain=0.004 prot=0.195

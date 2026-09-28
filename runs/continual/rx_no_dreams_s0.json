@@ -1,0 +1,469 @@
+{
+  "method": "rx_no_dreams",
+  "seed": 0,
+  "stream": "default",
+  "base_skills": [
+    "copy",
+    "reverse",
+    "succ",
+    "sort",
+    "max",
+    "interleave"
+  ],
+  "new_skills": [
+    "rotl",
+    "pred",
+    "swap_pairs",
+    "sort_desc",
+    "add_first",
+    "first_last"
+  ],
+  "initial": {
+    "copy": 1.0,
+    "reverse": 1.0,
+    "succ": 1.0,
+    "sort": 0.9453125,
+    "max": 1.0,
+    "interleave": 1.0,
+    "rotl": 0.0,
+    "pred": 0.0,
+    "swap_pairs": 0.0,
+    "sort_desc": 0.0078125,
+    "add_first": 0.0,
+    "first_last": 0.0
+  },
+  "matrix": [
+    {
+      "after": "rotl",
+      "slept": false,
+      "copy": 1.0,
+      "reverse": 1.0,
+      "succ": 1.0,
+      "sort": 0.9453125,
+      "max": 1.0,
+      "interleave": 1.0,
+      "rotl": 1.0,
+      "pred": 0.0,
+      "swap_pairs": 0.0078125,
+      "sort_desc": 0.0546875,
+      "add_first": 0.0,
+      "first_last": 0.0
+    },
+    {
+      "after": "pred",
+      "slept": true,
+      "copy": 1.0,
+      "reverse": 0.96484375,
+      "succ": 1.0,
+      "sort": 0.91015625,
+      "max": 0.9765625,
+      "interleave": 0.99609375,
+      "rotl": 1.0,
+      "pred": 1.0,
+      "swap_pairs": 0.0078125,
+      "sort_desc": 0.05078125,
+      "add_first": 0.0,
+      "first_last": 0.0
+    },
+    {
+      "after": "swap_pairs",
+      "slept": false,
+      "copy": 1.0,
+      "reverse": 0.96484375,
+      "succ": 1.0,
+      "sort": 0.91015625,
+      "max": 0.9765625,
+      "interleave": 0.99609375,
+      "rotl": 0.8828125,
+      "pred": 1.0,
+      "swap_pairs": 0.73046875,
+      "sort_desc": 0.03515625,
+      "add_first": 0.0,
+      "first_last": 0.0
+    },
+    {
+      "after": "sort_desc",
+      "slept": true,
+      "copy": 1.0,
+      "reverse": 0.96484375,
+      "succ": 1.0,
+      "sort": 0.91015625,
+      "max": 0.9765625,
+      "interleave": 0.99609375,
+      "rotl": 0.98828125,
+      "pred": 1.0,
+      "swap_pairs": 0.55078125,
+      "sort_desc": 0.94921875,
+      "add_first": 0.0,
+      "first_last": 0.0
+    },
+    {
+      "after": "add_first",
+      "slept": true,
+      "copy": 1.0,
+      "reverse": 0.96484375,
+      "succ": 1.0,
+      "sort": 0.91015625,
+      "max": 0.9765625,
+      "interleave": 0.99609375,
+      "rotl": 1.0,
+      "pred": 1.0,
+      "swap_pairs": 0.44921875,
+      "sort_desc": 0.94921875,
+      "add_first": 0.90234375,
+      "first_last": 0.0
+    },
+    {
+      "after": "first_last",
+      "slept": true,
+      "copy": 1.0,
+      "reverse": 0.96484375,
+      "succ": 1.0,
+      "sort": 0.91015625,
+      "max": 0.9765625,
+      "interleave": 0.99609375,
+      "rotl": 0.99609375,
+      "pred": 1.0,
+      "swap_pairs": 0.4921875,
+      "sort_desc": 0.953125,
+      "add_first": 0.93359375,
+      "first_last": 0.99609375
+    }
+  ],
+  "seconds": 1008.8110320568085,
+  "history": [
+    {
+      "event": "wake",
+      "skill": "rotl",
+      "accepted": true,
+      "acc_base": 0.0,
+      "acc_skill": 1.0,
+      "gain": 1.0,
+      "merge_preview_max_anchor_drop": 0.98046875
+    },
+    {
+      "event": "wake",
+      "skill": "pred",
+      "accepted": true,
+      "acc_base": 0.0,
+      "acc_skill": 1.0,
+      "gain": 1.0,
+      "merge_preview_max_anchor_drop": 0.99609375
+    },
+    {
+      "event": "sleep",
+      "skills": [
+        "rotl",
+        "pred"
+      ],
+      "n_dreams": 0,
+      "rem_final_loss": 0.8675958544015885,
+      "protected_fraction": 0.15939245810055866,
+      "seconds": 135.86767315864563,
+      "audit": {
+        "commit": true,
+        "syndrome": [],
+        "probes": {
+          "copy": {
+            "before": 1.0,
+            "after": 1.0
+          },
+          "reverse": {
+            "before": 1.0,
+            "after": 0.984375
+          },
+          "succ": {
+            "before": 1.0,
+            "after": 1.0
+          },
+          "sort": {
+            "before": 0.96875,
+            "after": 0.921875
+          },
+          "max": {
+            "before": 1.0,
+            "after": 1.0
+          },
+          "interleave": {
+            "before": 1.0,
+            "after": 1.0
+          },
+          "rotl": {
+            "before": 0.984375,
+            "after": 1.0
+          },
+          "pred": {
+            "before": 1.0,
+            "after": 1.0
+          }
+        }
+      },
+      "cycle": 1,
+      "committed": true
+    },
+    {
+      "event": "wake",
+      "skill": "swap_pairs",
+      "accepted": true,
+      "acc_base": 0.0078125,
+      "acc_skill": 1.0,
+      "gain": 0.9921875,
+      "merge_preview_max_anchor_drop": 0.98046875
+    },
+    {
+      "event": "wake",
+      "skill": "sort_desc",
+      "accepted": true,
+      "acc_base": 0.046875,
+      "acc_skill": 0.953125,
+      "gain": 0.90625,
+      "merge_preview_max_anchor_drop": 1.0
+    },
+    {
+      "event": "sleep_rolled_back",
+      "skills": [
+        "swap_pairs",
+        "sort_desc"
+      ],
+      "n_dreams": 0,
+      "rem_final_loss": 1.0630054771900177,
+      "protected_fraction": 0.19186452513966482,
+      "seconds": 137.2262213230133,
+      "audit": {
+        "commit": false,
+        "syndrome": [
+          "reverse: regressed 0.98 -> 0.73",
+          "sort: regressed 0.92 -> 0.72",
+          "rotl: regressed 1.00 -> 0.80",
+          "pred: regressed 1.00 -> 0.59"
+        ],
+        "probes": {
+          "copy": {
+            "before": 1.0,
+            "after": 1.0
+          },
+          "reverse": {
+            "before": 0.984375,
+            "after": 0.734375
+          },
+          "succ": {
+            "before": 1.0,
+            "after": 1.0
+          },
+          "sort": {
+            "before": 0.921875,
+            "after": 0.71875
+          },
+          "max": {
+            "before": 1.0,
+            "after": 0.96875
+          },
+          "interleave": {
+            "before": 1.0,
+            "after": 0.984375
+          },
+          "rotl": {
+            "before": 1.0,
+            "after": 0.796875
+          },
+          "pred": {
+            "before": 1.0,
+            "after": 0.59375
+          },
+          "swap_pairs": {
+            "before": 0.46875,
+            "after": 1.0
+          },
+          "sort_desc": {
+            "before": 0.96875,
+            "after": 0.796875
+          }
+        }
+      },
+      "cycle": 1,
+      "committed": false
+    },
+    {
+      "event": "wake",
+      "skill": "add_first",
+      "accepted": true,
+      "acc_base": 0.03515625,
+      "acc_skill": 0.98046875,
+      "gain": 0.9453125,
+      "merge_preview_max_anchor_drop": 1.0
+    },
+    {
+      "event": "sleep_rolled_back",
+      "skills": [
+        "swap_pairs",
+        "sort_desc",
+        "add_first"
+      ],
+      "n_dreams": 0,
+      "rem_final_loss": 2.6694616079330444,
+      "protected_fraction": 0.19579259776536312,
+      "seconds": 195.80632853507996,
+      "audit": {
+        "commit": false,
+        "syndrome": [
+          "reverse: regressed 0.98 -> 0.83",
+          "rotl: regressed 1.00 -> 0.70",
+          "pred: regressed 1.00 -> 0.73",
+          "sort_desc: not consolidated (0.31 < 0.5)"
+        ],
+        "probes": {
+          "copy": {
+            "before": 1.0,
+            "after": 0.96875
+          },
+          "reverse": {
+            "before": 0.984375,
+            "after": 0.828125
+          },
+          "succ": {
+            "before": 1.0,
+            "after": 0.96875
+          },
+          "sort": {
+            "before": 0.921875,
+            "after": 0.78125
+          },
+          "max": {
+            "before": 1.0,
+            "after": 0.984375
+          },
+          "interleave": {
+            "before": 1.0,
+            "after": 0.9375
+          },
+          "rotl": {
+            "before": 1.0,
+            "after": 0.703125
+          },
+          "pred": {
+            "before": 1.0,
+            "after": 0.734375
+          },
+          "swap_pairs": {
+            "before": 0.4375,
+            "after": 1.0
+          },
+          "sort_desc": {
+            "before": 0.96875,
+            "after": 0.3125
+          },
+          "add_first": {
+            "before": 0.9375,
+            "after": 0.5
+          }
+        }
+      },
+      "cycle": 1,
+      "committed": false
+    },
+    {
+      "event": "wake",
+      "skill": "first_last",
+      "accepted": true,
+      "acc_base": 0.0,
+      "acc_skill": 1.0,
+      "gain": 1.0,
+      "merge_preview_max_anchor_drop": 1.0
+    },
+    {
+      "event": "sleep_rolled_back",
+      "skills": [
+        "swap_pairs",
+        "sort_desc",
+        "add_first",
+        "first_last"
+      ],
+      "n_dreams": 0,
+      "rem_final_loss": 4.2744155645370485,
+      "protected_fraction": 0.1963163407821229,
+      "seconds": 243.3695993423462,
+      "audit": {
+        "commit": false,
+        "syndrome": [
+          "sort: regressed 0.92 -> 0.72",
+          "rotl: regressed 1.00 -> 0.66",
+          "pred: regressed 1.00 -> 0.50",
+          "sort_desc: not consolidated (0.31 < 0.5)",
+          "add_first: not consolidated (0.09 < 0.5)"
+        ],
+        "probes": {
+          "copy": {
+            "before": 1.0,
+            "after": 1.0
+          },
+          "reverse": {
+            "before": 0.984375,
+            "after": 0.875
+          },
+          "succ": {
+            "before": 1.0,
+            "after": 0.96875
+          },
+          "sort": {
+            "before": 0.921875,
+            "after": 0.71875
+          },
+          "max": {
+            "before": 1.0,
+            "after": 0.953125
+          },
+          "interleave": {
+            "before": 1.0,
+            "after": 0.96875
+          },
+          "rotl": {
+            "before": 1.0,
+            "after": 0.65625
+          },
+          "pred": {
+            "before": 1.0,
+            "after": 0.5
+          },
+          "swap_pairs": {
+            "before": 0.4375,
+            "after": 1.0
+          },
+          "sort_desc": {
+            "before": 0.96875,
+            "after": 0.3125
+          },
+          "add_first": {
+            "before": 0.96875,
+            "after": 0.09375
+          },
+          "first_last": {
+            "before": 1.0,
+            "after": 1.0
+          }
+        }
+      },
+      "cycle": 1,
+      "committed": false
+    }
+  ],
+  "final_base_only": {
+    "copy": 1.0,
+    "reverse": 0.96484375,
+    "succ": 1.0,
+    "sort": 0.91015625,
+    "max": 0.9765625,
+    "interleave": 0.99609375,
+    "rotl": 1.0,
+    "pred": 1.0,
+    "swap_pairs": 0.0078125,
+    "sort_desc": 0.046875,
+    "add_first": 0.03515625,
+    "first_last": 0.0
+  },
+  "n_experts": [
+    4,
+    4,
+    4,
+    4
+  ]
+}

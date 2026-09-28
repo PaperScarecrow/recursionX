@@ -1,0 +1,74 @@
+{
+  "copy": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 1.0
+  },
+  "reverse": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 1.0
+  },
+  "succ": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 1.0
+  },
+  "sort": {
+    "ridge": 0.945,
+    "tokid": 0.945,
+    "oracle": 0.945,
+    "base": 0.945
+  },
+  "max": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 1.0
+  },
+  "interleave": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 1.0
+  },
+  "rotl": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 0.0
+  },
+  "pred": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 0.0
+  },
+  "swap_pairs": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 0.0
+  },
+  "sort_desc": {
+    "ridge": 0.984,
+    "tokid": 0.984,
+    "oracle": 0.984,
+    "base": 0.008
+  },
+  "add_first": {
+    "ridge": 0.738,
+    "tokid": 0.738,
+    "oracle": 0.738,
+    "base": 0.0
+  },
+  "first_last": {
+    "ridge": 1.0,
+    "tokid": 1.0,
+    "oracle": 1.0,
+    "base": 0.0
+  }
+}

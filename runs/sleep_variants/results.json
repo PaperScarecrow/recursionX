@@ -1,0 +1,56 @@
+{
+  "awake(served)": {
+    "copy": 1.0,
+    "reverse": 1.0,
+    "succ": 1.0,
+    "sort": 0.9453125,
+    "max": 1.0,
+    "interleave": 1.0,
+    "rotl": 0.96484375,
+    "pred": 0.98828125
+  },
+  "merge+rem300+balanced": {
+    "copy": 1.0,
+    "reverse": 1.0,
+    "succ": 1.0,
+    "sort": 0.8359375,
+    "max": 0.98828125,
+    "interleave": 0.99609375,
+    "rotl": 1.0,
+    "pred": 1.0,
+    "sleep_seconds": 92.98132014274597
+  },
+  "nomerge+rem300+balanced": {
+    "copy": 1.0,
+    "reverse": 0.99609375,
+    "succ": 1.0,
+    "sort": 0.8984375,
+    "max": 0.9921875,
+    "interleave": 0.99609375,
+    "rotl": 1.0,
+    "pred": 1.0,
+    "sleep_seconds": 88.45105171203613
+  },
+  "nomerge+rem600+balanced": {
+    "copy": 1.0,
+    "reverse": 0.99609375,
+    "succ": 1.0,
+    "sort": 0.8984375,
+    "max": 0.9921875,
+    "interleave": 0.99609375,
+    "rotl": 1.0,
+    "pred": 1.0,
+    "sleep_seconds": 85.58405780792236
+  },
+  "merge_only": {
+    "copy": 1.0,
+    "reverse": 1.0,
+    "succ": 1.0,
+    "sort": 0.9453125,
+    "max": 1.0,
+    "interleave": 1.0,
+    "rotl": 0.96484375,
+    "pred": 0.98828125,
+    "sleep_seconds": 0.4473884105682373
+  }
+}
